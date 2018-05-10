@@ -8,3 +8,12 @@ Javascript client for Keboola Connection Storage API. This API client provides c
 ### Installation
 
 1. Install npm package: `yarn add @keboola/storage-api-js-client`
+
+
+### Usage
+
+```js
+const { Storage } = require('@keboola/storage-api-js-client');
+const storage = new Storage('https://connection.keboola.com', 'TOKEN');
+
+```

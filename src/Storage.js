@@ -1,4 +1,6 @@
-'use strict';
+import Buckets from './Buckets';
+import Jobs from './Jobs';
+import Tables from './Tables';
 
 const _ = require('lodash');
 const axios = require('axios');
@@ -24,10 +26,13 @@ export class StorageError extends Error {
   }
 }
 
-export default class Client {
+export default class Storage {
   constructor(baseUri, token) {
     this.baseUri = baseUri;
     this.token = token;
+    this.Buckets = new Buckets(this);
+    this.Jobs = new Jobs(this);
+    this.Tables = new Tables(this);
   }
 
   request(method, uri, data = null) {
@@ -53,5 +58,19 @@ export default class Client {
         );
       })
       .then(res => res.data);
+  }
+
+  verifyToken() {
+    return this.request('get', 'tokens/verify');
+  }
+
+  verifyTokenAdmin() {
+    return this.verifyToken()
+      .then(auth => new Promise((resolve, reject) => {
+        if (!_.has(auth, 'admin')) {
+          reject(StorageError.error('You need a master Storage token', 403));
+        }
+        resolve();
+      }).then(() => auth));
   }
 }
