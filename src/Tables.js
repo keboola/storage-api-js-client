@@ -1,19 +1,34 @@
 const _ = require('lodash');
+const aws = require('aws-sdk');
+const fs = require('fs');
+const Promise = require('bluebird');
+
+aws.config.setPromisesDependency(Promise);
 
 export default class Tables {
   constructor(storage) {
     this.storage = storage;
   }
 
-  create(bucket, name, fileId, primary = []) {
-    const data = {
-      name,
-      dataFileId: fileId,
-    };
-    if (_.size(primary) > 0) {
-      data.primaryKey = primary.join(',');
-    }
-    return this.storage.request('post', `buckets/${bucket}/tables-async`, data)
+  create(bucket, name, filePath, options = {}) {
+    return this.storage.Files.prepare(name, { federationToken: 1 })
+      .then((file) => {
+        const s3 = new aws.S3({
+          accessKeyId: file.uploadParams.credentials.AccessKeyId,
+          secretAccessKey: file.uploadParams.credentials.SecretAccessKey,
+          sessionToken: file.uploadParams.credentials.SessionToken,
+        });
+        return s3.putObject({
+          Bucket: file.uploadParams.bucket,
+          Key: file.uploadParams.key,
+          Body: fs.readFileSync(filePath),
+        }).promise()
+          .then(() => file.id);
+      })
+      .then(res => this.storage.request('post', `buckets/${bucket}/tables-async`, _.merge({
+        name,
+        dataFileId: res,
+      }, options)))
       .then(res => this.storage.Jobs.wait(res.id));
   }
 

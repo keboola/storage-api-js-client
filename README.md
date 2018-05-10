@@ -12,8 +12,23 @@ Javascript client for Keboola Connection Storage API. This API client provides c
 
 ### Usage
 
-```js
+```javascript
 const { Storage } = require('@keboola/storage-api-js-client');
 const storage = new Storage('https://connection.keboola.com', 'TOKEN');
 
+// You can call any request directly
+storage.request('get', 'buckets/bucket_id/tables')
+  .then(res => _.map(res, item => console.log(item.id)));
+
+// Or use helper methods
+storage.Buckets.create(stage, name, description = null, backend = null);
+storage.Buckets.get(id);
+storage.Buckets.delete(id, force = false);
+
+storage.Files.prepare(name, options = {});
+storage.Files.get(id, federationToken = false);
+
+storage.Tables.create(bucket, name, filePath, options = {});
+storage.Tables.get(id);
+storage.Tables.delete(id);
 ```
