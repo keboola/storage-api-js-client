@@ -1,18 +1,21 @@
 export default class Buckets {
-  constructor(client) {
-    this.client = client;
+  constructor(storage) {
+    this.storage = storage;
   }
 
-  create(stage, name, description = null) {
+  create(stage, name, description = null, backend = null) {
     const data = { stage, name };
     if (description) {
       data.description = description;
     }
-    return this.client.request('post', 'buckets', data);
+    if (backend) {
+      data.backend = backend;
+    }
+    return this.storage.request('post', 'buckets', data);
   }
 
   get(id) {
-    return this.client.request('get', `buckets/${id}`);
+    return this.storage.request('get', `buckets/${id}`);
   }
 
   delete(id, force = false) {
@@ -20,6 +23,6 @@ export default class Buckets {
     if (force) {
       uri += '?force=1';
     }
-    return this.client.request('delete', uri);
+    return this.storage.request('delete', uri);
   }
 }

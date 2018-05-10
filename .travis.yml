@@ -3,6 +3,9 @@ language: node_js
 node_js:
 - node
 
+before_script:
+  - ./node_modules/.bin/eslint .
+
 script:
   - ./node_modules/.bin/mocha --timeout 0 --require babel-register --require source-map-support test
 

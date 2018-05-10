@@ -1,4 +1,5 @@
 import Buckets from './Buckets';
+import Files from './Files';
 import Jobs from './Jobs';
 import Tables from './Tables';
 
@@ -31,6 +32,7 @@ export default class Storage {
     this.baseUri = baseUri;
     this.token = token;
     this.Buckets = new Buckets(this);
+    this.Files = new Files(this);
     this.Jobs = new Jobs(this);
     this.Tables = new Tables(this);
   }
