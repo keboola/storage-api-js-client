@@ -1,8 +1,13 @@
+import axiosRetry from 'axios-retry';
+
+const axios = require('axios');
 const _ = require('lodash');
 const aws = require('aws-sdk');
+const csvString = require('csv-string');
 const fs = require('fs');
 const Promise = require('bluebird');
 
+axiosRetry(axios, { retries: 5 });
 aws.config.setPromisesDependency(Promise);
 
 export default class Tables {
@@ -36,10 +41,32 @@ export default class Tables {
     return this.storage.request('get', `tables/${id}`);
   }
 
-  export(tableId, data = null) {
-    return this.storage.request('post', `tables/${tableId}/export-async`, data)
+  export(tableId, options = {}) {
+    return this.storage.request('post', `tables/${tableId}/export-async`, options)
       .then(res => this.storage.Jobs.wait(res.id))
-      .then(res => _.get(res, 'results.file.id'));
+      .then(res => _.get(res, 'results.file.id'))
+      .then(id => this.storage.Files.get(id, true))
+      .then((file) => {
+        const s3 = new aws.S3({
+          accessKeyId: file.credentials.AccessKeyId,
+          secretAccessKey: file.credentials.SecretAccessKey,
+          sessionToken: file.credentials.SessionToken,
+        });
+        return axios.get(file.url)
+          .then((res) => {
+            if (!file.isSliced) {
+              return res.data;
+            }
+            return Promise.resolve(_.map(res.data.entries, r => r.url))
+              .then(slices => Promise.all(_.map(slices, sliceUrl => s3.getObject({
+                Bucket: file.s3Path.bucket,
+                Key: sliceUrl.substr(sliceUrl.indexOf('/', 5) + 1),
+              }).promise())))
+              .then(s3Files => _.map(s3Files, s3File => s3File.Body.toString('utf8')))
+              .then(csvFiles => _.map(csvFiles, csvFile => csvString.parse(csvFile)))
+              .then(csvSlices => _.reduce(csvSlices));
+          });
+      });
   }
 
   delete(id) {

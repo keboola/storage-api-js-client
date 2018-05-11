@@ -8,59 +8,85 @@ const expect = require('unexpected');
 
 aws.config.setPromisesDependency(Promise);
 
+function createTestTable(storage, bucket, table) {
+  return storage.Files.prepare(`${bucket}.${table}`, { federationToken: 1 })
+    .then((file) => {
+      const s3 = new aws.S3({
+        accessKeyId: file.uploadParams.credentials.AccessKeyId,
+        secretAccessKey: file.uploadParams.credentials.SecretAccessKey,
+        sessionToken: file.uploadParams.credentials.SessionToken,
+      });
+      return s3.putObject({
+        Bucket: file.uploadParams.bucket,
+        Key: file.uploadParams.key,
+        Body: fs.readFileSync(`${__dirname}/sample.csv`),
+      }).promise()
+        .then(() => file.id);
+    })
+    .then(res => storage.request('post', `buckets/${bucket}/tables-async`, {
+      name: table,
+      dataFileId: res,
+    }))
+    .then(res => storage.Jobs.wait(res.id));
+}
+
 describe('Storage.Tables', () => {
   const storage = new Storage(process.env.KBC_URL, process.env.KBC_TOKEN);
 
-  const bucketName1 = `bucket1-${_.random(1000, 2000)}`;
-  const bucketId1 = `in.c-${bucketName1}`;
+  let bucketName;
+  let bucketId;
+  let tableName;
+  let tableId;
+  beforeEach(() => {
+    bucketName = `bucket-${_.random(1000, 2000)}`;
+    bucketId = `in.c-${bucketName}`;
+    tableName = `table-${_.random(1000, 2000)}`;
+    tableId = `${bucketId}.${tableName}`;
+    return storage.request('post', 'buckets', { stage: 'in', name: bucketName });
+  });
+
+  afterEach(() => storage.request('delete', `buckets/${bucketId}?force=1`));
+
   it('create', () =>
-    storage.request('post', 'buckets', { stage: 'in', name: bucketName1 })
-      .then(() => storage.Tables.create(bucketId1, 'table', `${__dirname}/sample.csv`, { primaryKey: 'id' }))
+    storage.Tables.create(bucketId, 'table', `${__dirname}/sample.csv`, { primaryKey: 'id' })
       .then((res) => {
         expect(res, 'to have key', 'results');
         expect(res.results, 'to have key', 'id');
-        expect(res.results.id, 'to be', `${bucketId1}.table`);
+        expect(res.results.id, 'to be', `${bucketId}.table`);
         expect(res.results, 'to have key', 'primaryKey');
         expect(res.results.primaryKey, 'to equal', ['id']);
         expect(res.results, 'to have key', 'columns');
         expect(res.results.columns, 'to equal', ['id', 'name', 'price', 'date', 'info', 'category']);
         expect(res.results, 'to have key', 'rowsCount');
         expect(res.results.rowsCount, 'to be', 5);
-      })
-      .then(() => storage.request('delete', `buckets/${bucketId1}?force=1`)));
+      }));
 
-  const bucketName2 = `bucket2-${_.random(1000, 2000)}`;
-  const bucketId2 = `in.c-${bucketName2}`;
-  const tableId2 = `${bucketId2}.table`;
   it('get', () =>
-    storage.request('post', 'buckets', { stage: 'in', name: bucketName2 })
-      .then(() => storage.Files.prepare(tableId2, { federationToken: 1 }))
-      .then((file) => {
-        const s3 = new aws.S3({
-          accessKeyId: file.uploadParams.credentials.AccessKeyId,
-          secretAccessKey: file.uploadParams.credentials.SecretAccessKey,
-          sessionToken: file.uploadParams.credentials.SessionToken,
-        });
-        return s3.putObject({
-          Bucket: file.uploadParams.bucket,
-          Key: file.uploadParams.key,
-          Body: fs.readFileSync(`${__dirname}/sample.csv`),
-        }).promise()
-          .then(() => file.id);
-      })
-      .then(res => storage.request('post', `buckets/${bucketId2}/tables-async`, {
-        name: 'table',
-        dataFileId: res,
-      }))
-      .then(res => storage.Jobs.wait(res.id))
-      .then(() => storage.Tables.get(tableId2))
+    createTestTable(storage, bucketId, tableName)
+      .then(() => storage.Tables.get(tableId))
       .then((res) => {
         expect(res, 'to have key', 'id');
-        expect(res.id, 'to be', `${bucketId2}.table`);
+        expect(res.id, 'to be', tableId);
         expect(res, 'to have key', 'columns');
         expect(res.columns, 'to equal', ['id', 'name', 'price', 'date', 'info', 'category']);
         expect(res, 'to have key', 'rowsCount');
         expect(res.rowsCount, 'to be', 5);
-      })
-      .then(() => storage.request('delete', `buckets/${bucketId2}?force=1`)));
+      }));
+
+  it('export', () =>
+    createTestTable(storage, bucketId, tableName)
+      .then(() => expect(() => storage.request('get', `tables/${tableId}`), 'to be fulfilled'))
+      .then(() => storage.Tables.export(tableId))
+      .then((res) => {
+        expect(res, 'to be a', 'array');
+        expect(res, 'to have length', 5);
+        expect(res[0], 'to be a', 'array');
+        expect(res[0], 'to have length', 6);
+      }));
+
+  it('delete', () =>
+    createTestTable(storage, bucketId, tableName)
+      .then(() => expect(() => storage.request('get', `tables/${tableId}`), 'to be fulfilled'))
+      .then(() => storage.Tables.delete(tableId))
+      .then(() => expect(() => storage.request('get', `tables/${tableId}`), 'to be rejected')));
 });

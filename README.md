@@ -30,5 +30,6 @@ storage.Files.get(id, federationToken = false);
 
 storage.Tables.create(bucket, name, filePath, options = {});
 storage.Tables.get(id);
+storage.Tables.export(tableId, options = {});
 storage.Tables.delete(id);
 ```
