@@ -5,6 +5,8 @@
 
 Javascript client for Keboola Connection Storage API. This API client provides client methods to get data from KBC and store data in KBC. The endpoints for working with buckets and tables are covered.
 
+Tables import and export is processed in-memory so it is suitable rather for smaller tables.
+
 ### Installation
 
 1. Install npm package: `yarn add @keboola/storage-api-js-client`
