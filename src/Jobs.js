@@ -1,7 +1,7 @@
-import sleep from 'sleep-promise';
-import { StorageError } from './Storage';
-
 const _ = require('lodash');
+const sleep = require('sleep-promise');
+
+const { StorageError } = require('./Storage');
 
 export default class Jobs {
   constructor(storage) {
@@ -25,3 +25,5 @@ export default class Jobs {
       });
   }
 }
+
+module.exports = Jobs;

@@ -26,3 +26,5 @@ export default class Buckets {
     return this.storage.request('delete', uri);
   }
 }
+
+module.exports = Buckets;

@@ -18,3 +18,5 @@ export default class Files {
     return this.storage.request('get', uri);
   }
 }
+
+module.exports = Files;

@@ -1,12 +1,12 @@
-import Buckets from './Buckets';
-import Files from './Files';
-import Jobs from './Jobs';
-import Tables from './Tables';
-
 const _ = require('lodash');
 const axios = require('axios');
 const Promise = require('bluebird');
 const QueryString = require('querystring');
+
+const Buckets = require('./Buckets');
+const Files = require('./Files');
+const Jobs = require('./Jobs');
+const Tables = require('./Tables');
 
 export class StorageError extends Error {
   constructor(...args) {

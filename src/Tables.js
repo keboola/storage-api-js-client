@@ -1,6 +1,5 @@
-import axiosRetry from 'axios-retry';
-
 const axios = require('axios');
+const axiosRetry = require('axios-retry');
 const _ = require('lodash');
 const aws = require('aws-sdk');
 const csvString = require('csv-string');
@@ -73,3 +72,5 @@ export default class Tables {
     return this.storage.request('delete', `tables/${id}`);
   }
 }
+
+module.exports = Tables;
