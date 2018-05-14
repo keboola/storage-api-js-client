@@ -23,7 +23,7 @@ storage.request('get', 'buckets/bucket_id/tables')
   .then(res => _.map(res, item => console.log(item.id)));
 
 // Or use helper methods
-storage.Buckets.create(stage, name, description = null, backend = null);
+storage.Buckets.create(stage, name, options = {});
 storage.Buckets.get(id);
 storage.Buckets.delete(id, force = false);
 

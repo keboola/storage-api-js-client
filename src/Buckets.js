@@ -1,17 +1,12 @@
+const _ = require('lodash');
+
 class Buckets {
   constructor(storage) {
     this.storage = storage;
   }
 
-  create(stage, name, description = null, backend = null) {
-    const data = { stage, name };
-    if (description) {
-      data.description = description;
-    }
-    if (backend) {
-      data.backend = backend;
-    }
-    return this.storage.request('post', 'buckets', data);
+  create(stage, name, options = {}) {
+    return this.storage.request('post', 'buckets', _.merge({ stage, name }, options));
   }
 
   get(id) {

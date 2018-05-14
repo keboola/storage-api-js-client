@@ -10,8 +10,12 @@ describe('Storage.Buckets', () => {
   const bucketId1 = `in.c-${bucketName1}`;
   it('create', () =>
     expect(() => storage.request('get', `buckets/${bucketId1}`), 'to be rejected')
-      .then(() => expect(() => storage.Buckets.create('in', bucketName1, bucketName1), 'to be fulfilled'))
-      .then(() => expect(() => storage.request('get', `buckets/${bucketId1}`), 'to be fulfilled'))
+      .then(() => expect(() => storage.Buckets.create('in', bucketName1, { description: bucketName1 }), 'to be fulfilled'))
+      .then(() => storage.request('get', `buckets/${bucketId1}`))
+      .then((res) => {
+        expect(res, 'to have key', 'description');
+        expect(res.description, 'to be', bucketName1);
+      })
       .then(() => storage.request('delete', `buckets/${bucketId1}`)));
 
   const bucketName2 = `bucket2-${_.random(1000, 2000)}`;
