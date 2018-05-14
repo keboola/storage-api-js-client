@@ -9,7 +9,7 @@ const Jobs = require('./Jobs');
 const StorageError = require('./StorageError');
 const Tables = require('./Tables');
 
-export default class Storage {
+class Storage {
   constructor(baseUri, token) {
     this.baseUri = baseUri;
     this.token = token;
@@ -58,3 +58,5 @@ export default class Storage {
       }).then(() => auth));
   }
 }
+
+module.exports = Storage;
