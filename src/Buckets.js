@@ -1,4 +1,4 @@
-export default class Buckets {
+class Buckets {
   constructor(storage) {
     this.storage = storage;
   }

@@ -9,7 +9,7 @@ const Promise = require('bluebird');
 axiosRetry(axios, { retries: 5 });
 aws.config.setPromisesDependency(Promise);
 
-export default class Tables {
+class Tables {
   constructor(storage) {
     this.storage = storage;
   }

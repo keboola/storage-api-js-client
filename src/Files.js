@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-export default class Files {
+class Files {
   constructor(storage) {
     this.storage = storage;
   }

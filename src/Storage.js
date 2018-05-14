@@ -6,26 +6,8 @@ const QueryString = require('querystring');
 const Buckets = require('./Buckets');
 const Files = require('./Files');
 const Jobs = require('./Jobs');
+const StorageError = require('./StorageError');
 const Tables = require('./Tables');
-
-export class StorageError extends Error {
-  constructor(...args) {
-    super(...args);
-    Error.captureStackTrace(this, StorageError);
-  }
-
-  static unauthorized(msg = 'Unauthorized') {
-    const err = new StorageError(msg);
-    err.code = 401;
-    return err;
-  }
-
-  static error(msg = 'Error', code = 400) {
-    const err = new StorageError(msg);
-    err.code = code;
-    return err;
-  }
-}
 
 export default class Storage {
   constructor(baseUri, token) {

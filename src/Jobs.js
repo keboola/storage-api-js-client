@@ -1,9 +1,9 @@
 const _ = require('lodash');
 const sleep = require('sleep-promise');
 
-const { StorageError } = require('./Storage');
+const StorageError = require('./StorageError');
 
-export default class Jobs {
+class Jobs {
   constructor(storage) {
     this.storage = storage;
   }
