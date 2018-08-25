@@ -1,7 +1,6 @@
 const _ = require('lodash');
+const createError = require('http-errors');
 const sleep = require('sleep-promise');
-
-const StorageError = require('./StorageError');
 
 class Jobs {
   constructor(storage) {
@@ -10,7 +9,7 @@ class Jobs {
 
   wait(id, repeat = 1) {
     if (repeat > 20) {
-      throw new StorageError(`Storage job ${id} has not finished even after 10 minutes, try again later.`);
+      throw createError(400, `Storage job ${id} has not finished even after 10 minutes, try again later.`);
     }
     return this.storage.request('get', `jobs/${id}`)
       .then((res) => {
@@ -21,7 +20,7 @@ class Jobs {
         if (_.get(res, 'status') === 'success') {
           return res;
         }
-        throw new StorageError(`Storage job ${id} failed with error ${JSON.stringify(res)}`);
+        throw createError(400, `Storage job ${id} failed with error ${JSON.stringify(res)}`);
       });
   }
 }

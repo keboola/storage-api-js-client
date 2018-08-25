@@ -7,6 +7,7 @@ class Files {
 
   prepare(name, options = {}) {
     const data = _.merge({ name }, options);
+    data.federationToken = true;
     return this.storage.request('post', 'files/prepare', data);
   }
 

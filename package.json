@@ -1,6 +1,6 @@
 {
   "name": "@keboola/storage-api-js-client",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "description": "Javascript client for Keboola Storage API",
   "main": "src/Storage.js",
   "repository": "https://github.com/keboola/storage-api-js-client",
@@ -15,17 +15,18 @@
     "axios-retry": "^3.1.0",
     "bluebird": "^3.5.1",
     "csv-string": "^3.1.2",
+    "http-errors": "^1.7.0",
     "lodash": "^4.17.10",
     "querystring": "^0.2.0",
-    "sleep-promise": "^6.0.0"
+    "sleep-promise": "^8.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.11.0",
     "mocha": "^5.1.1",
     "unexpected": "^10.37.7"

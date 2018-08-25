@@ -1,12 +1,12 @@
 const _ = require('lodash');
 const axios = require('axios');
+const createError = require('http-errors');
 const Promise = require('bluebird');
 const QueryString = require('querystring');
 
 const Buckets = require('./Buckets');
 const Files = require('./Files');
 const Jobs = require('./Jobs');
-const StorageError = require('./StorageError');
 const Tables = require('./Tables');
 
 class Storage {
@@ -32,13 +32,13 @@ class Storage {
     return axios(params)
       .catch((err) => {
         if (_.get(err, 'response.status', null) === 401) {
-          throw StorageError.unauthorized('Invalid access token');
+          throw createError(401, 'Invalid access token');
         }
         const message = _.get(err, 'response.data.error', err.message);
         const code = _.get(err, 'response.status', 0);
-        throw StorageError.error(
-          `Storage request ${method} ${url} failed with code ${code} and message: ${message}`,
-          code
+        throw createError(
+          code,
+          `Storage request ${method} ${url} failed with code ${code} and message: ${message}`
         );
       })
       .then(res => res.data);
@@ -52,7 +52,7 @@ class Storage {
     return this.verifyToken()
       .then(auth => new Promise((resolve, reject) => {
         if (!_.has(auth, 'admin')) {
-          reject(StorageError.error('You need a master Storage token', 403));
+          reject(createError(403, 'You need a master Storage token'));
         }
         resolve();
       }).then(() => auth));
