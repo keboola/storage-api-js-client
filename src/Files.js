@@ -1,17 +1,21 @@
-const _ = require('lodash');
+// @flow
+import _ from 'lodash';
+import Storage from './Storage';
 
 class Files {
-  constructor(storage) {
+  storage: Storage;
+
+  constructor(storage: Object) {
     this.storage = storage;
   }
 
-  prepare(name, options = {}) {
+  prepare(name: string, options: Object = {}): Promise<Object> {
     const data = _.merge({ name }, options);
     data.federationToken = true;
     return this.storage.request('post', 'files/prepare', data);
   }
 
-  get(id, federationToken = false) {
+  get(id: string, federationToken: boolean = false): Promise<Object> {
     let uri = `files/${id}`;
     if (federationToken) {
       uri += '?federationToken=1';

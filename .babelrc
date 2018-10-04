@@ -1,4 +1,9 @@
 {
-  "presets": ["env"],
-  "plugins": ["transform-runtime"]
+  "presets": [
+    "@babel/env",
+    "@babel/flow"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ]
 }
