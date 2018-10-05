@@ -1,6 +1,6 @@
 {
   "name": "@keboola/storage-api-js-client",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Javascript client for Keboola Storage API",
   "repository": "https://github.com/keboola/storage-api-js-client",
   "author": "Jakub Matejka <jakub@keboola.com>",
@@ -40,7 +40,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --bail --exit --timeout 0 --require @babel/register --require source-map-support test",
-    "lint": "./node_modules/.bin/eslint .",
+    "lint": "./node_modules/.bin/eslint src test",
     "prepack": "yarn prepack:babel && yarn prepack:flow",
     "prepack:babel": "./node_modules/.bin/babel src/ -d lib",
     "prepack:flow": "./node_modules/.bin/flow-copy-source src lib"
