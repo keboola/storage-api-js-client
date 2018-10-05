@@ -1,8 +1,7 @@
 {
   "name": "@keboola/storage-api-js-client",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Javascript client for Keboola Storage API",
-  "main": "src/Storage.js",
   "repository": "https://github.com/keboola/storage-api-js-client",
   "author": "Jakub Matejka <jakub@keboola.com>",
   "license": "MIT",
@@ -13,7 +12,6 @@
     "aws-sdk": "^2.236.1",
     "axios": "^0.18.0",
     "axios-retry": "^3.1.0",
-    "bluebird": "^3.5.1",
     "csv-string": "^3.1.2",
     "http-errors": "^1.7.0",
     "lodash": "^4.17.10",
@@ -21,14 +19,34 @@
     "sleep-promise": "^8.0.1"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.1",
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.1.2",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
     "eslint": "^5.4.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-flowtype-errors": "^3.6.0",
+    "eslint-plugin-import": "^2.14.0",
+    "flow-bin": "^0.82.0",
+    "flow-copy-source": "^2.0.2",
     "mocha": "^5.1.1",
     "unexpected": "^10.37.7"
-  }
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --bail --exit --timeout 0 --require @babel/register --require source-map-support test",
+    "lint": "./node_modules/.bin/eslint .",
+    "prepack": "yarn prepack:babel && yarn prepack:flow",
+    "prepack:babel": "./node_modules/.bin/babel src/ -d lib",
+    "prepack:flow": "./node_modules/.bin/flow-copy-source src lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "main": "lib/Storage.js"
 }

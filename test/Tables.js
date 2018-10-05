@@ -3,10 +3,7 @@ import Storage from '../src/Storage';
 const _ = require('lodash');
 const aws = require('aws-sdk');
 const fs = require('fs');
-const Promise = require('bluebird');
 const expect = require('unexpected');
-
-aws.config.setPromisesDependency(Promise);
 
 function createTestTable(storage, bucket, table) {
   return storage.Files.prepare(`${bucket}.${table}`, { federationToken: 1 })

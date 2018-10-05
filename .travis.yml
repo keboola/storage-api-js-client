@@ -4,10 +4,10 @@ node_js:
 - node
 
 before_script:
-  - ./node_modules/.bin/eslint .
+  - yarn lint
 
 script:
-  - ./node_modules/.bin/mocha --timeout 0 --require babel-register --require source-map-support test
+  - yarn test
 
 deploy:
   provider: npm
