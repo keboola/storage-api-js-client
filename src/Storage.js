@@ -13,7 +13,7 @@ import Tables from './Tables';
 
 axiosRetry(axios, { retries: 5 });
 
-class Storage {
+export default class Storage {
   baseUri: string;
 
   token: string;
@@ -74,5 +74,3 @@ class Storage {
     return auth;
   }
 }
-
-module.exports = Storage;
