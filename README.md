@@ -23,15 +23,34 @@ storage.request('get', 'buckets/bucket_id/tables')
   .then(res => _.map(res, item => console.log(item.id)));
 
 // Or use helper methods
-storage.Buckets.create(stage, name, options = {});
-storage.Buckets.get(id);
-storage.Buckets.delete(id, force = false);
+storage.Buckets.create(stage: "in" | "out", name: string, options: Object = {}): Promise<Object>;
+storage.Buckets.get(id: string): Promise<Object>;
+storage.Buckets.delete(id: string, force: boolean = false): Promise<Object>;
 
-storage.Files.prepare(name, options = {});
-storage.Files.get(id, federationToken = false);
+storage.Configurations.create(componentName: string, name: string, options: ?{ configurationId: ?string, description: ?string, configuration: ?Object, state: ?Object, changeDescription: ?string }): Promise<string>;
+storage.Configurations.get(componentName: string, id: string): Promise<Object>;
+storage.Configurations.delete(componentName: string, id: string): Promise<Object>;
 
-storage.Tables.create(bucket, name, filePath, options = {});
-storage.Tables.get(id);
-storage.Tables.export(tableId, options = {});
-storage.Tables.delete(id);
+storage.Files.prepare(name: string, options: Object = {}): Promise<Object>;
+storage.Files.get(id: string, federationToken: boolean = false): Promise<Object>;
+
+storage.Tables.create(bucket: string, name: string, filePath: string, options: Object = {}): Promise<void>;
+storage.Tables.get(id: string): Promise<Object>;
+storage.Tables.export(tableId: string, options: Object = {}): Promise<Array<any>>;
+storage.Tables.delete(id: string): Promise<Object>;
 ```
+
+
+### Tests and development
+
+You need to set some env variables for the tests:
+- `KBC_URL`
+- `KBC_TOKEN`
+- `KBC_COMPONENT` - name of some component used for Components Configurations API tests
+Tests can be run using `yarn test`.
+
+The repository requires conforming to a set of coding standards based on [AirBnB code standard](https://github.com/airbnb/javascript) and [Flow type annotations](https://flow.org/en/docs/types/). Both standards are checked by ESlint. You can run the check using `yarn lint`.
+
+### Deployment
+
+Deployment to NPM compiles the code from `src` directory to `lib` directory. Flow files are compiled to ES6 Javascript and original files are copied with `.flow` extension. (So e.g. `src/Buckets.js` is copied to `lib/Buckets.js.flow` and compiled to `lib/Buckets.js`).

@@ -6,6 +6,7 @@ import createError from 'http-errors';
 import QueryString from 'querystring';
 
 import Buckets from './Buckets';
+import Configurations from './Configurations';
 import Files from './Files';
 import Jobs from './Jobs';
 import Tables from './Tables';
@@ -19,6 +20,8 @@ class Storage {
 
   Buckets: Buckets;
 
+  Configurations: Configurations;
+
   Files: Files;
 
   Jobs: Jobs;
@@ -29,6 +32,7 @@ class Storage {
     this.baseUri = baseUri;
     this.token = token;
     this.Buckets = new Buckets(this);
+    this.Configurations = new Configurations(this);
     this.Files = new Files(this);
     this.Jobs = new Jobs(this);
     this.Tables = new Tables(this);
