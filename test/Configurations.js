@@ -7,7 +7,7 @@ describe('Storage.Configurations', () => {
   const storage = new Storage(process.env.KBC_URL, process.env.KBC_TOKEN);
 
   const component = process.env.KBC_COMPONENT;
-  const config1 = `c1-${_.random(1000, 9000)}`;
+  const config1 = `c1-${_.random(1000, 90000)}`;
   it('create', async () => {
     await expect(storage.request('get', `components/${component}/configs/${config1}`), 'to be rejected');
 
@@ -25,7 +25,7 @@ describe('Storage.Configurations', () => {
     await storage.request('delete', `components/${component}/configs/${configId}`);
   });
 
-  const config2 = `c2-${_.random(1000, 9000)}`;
+  const config2 = `c2-${_.random(1000, 90000)}`;
   it('get', async () => {
     await expect(storage.Configurations.get(component, config2), 'to be rejected');
 
@@ -47,7 +47,7 @@ describe('Storage.Configurations', () => {
     await storage.request('delete', `components/${component}/configs/${config2}`);
   });
 
-  const config3 = `c3-${_.random(1000, 9000)}`;
+  const config3 = `c3-${_.random(1000, 90000)}`;
   it('delete', async () => {
     await storage.request(
       'post',
