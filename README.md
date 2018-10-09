@@ -23,22 +23,22 @@ storage.request('get', 'buckets/bucket_id/tables')
   .then(res => _.map(res, item => console.log(item.id)));
 
 // Or use helper methods
-storage.Buckets.create(stage: "in" | "out", name: string, options: Object = {}): Promise<Object>;
-storage.Buckets.get(id: string): Promise<Object>;
-storage.Buckets.list(include: ?Array<string>): Promise<Array<Object>>;
-storage.Buckets.delete(id: string, force: boolean = false): Promise<Object>;
+storage.Buckets.create(stage: "in" | "out", name: string, options: Object = {}): Promise<any>;
+storage.Buckets.get(id: string): Promise<any>;
+storage.Buckets.list(include: ?Array<string>): Promise<any>;
+storage.Buckets.delete(id: string, force: boolean = false): Promise<any>;
 
 storage.Configurations.create(componentName: string, name: string, options: ?{ configurationId: ?string, description: ?string, configuration: ?Object, state: ?Object, changeDescription: ?string }): Promise<string>;
-storage.Configurations.get(componentName: string, id: string): Promise<Object>;
-storage.Configurations.delete(componentName: string, id: string): Promise<Object>;
+storage.Configurations.get(componentName: string, id: string): Promise<any>;
+storage.Configurations.delete(componentName: string, id: string): Promise<any>;
 
-storage.Files.prepare(name: string, options: Object = {}): Promise<Object>;
-storage.Files.get(id: string, federationToken: boolean = false): Promise<Object>;
+storage.Files.prepare(name: string, options: Object = {}): Promise<any>;
+storage.Files.get(id: string, federationToken: boolean = false): Promise<any>;
 
 storage.Tables.create(bucket: string, name: string, filePath: string, options: Object = {}): Promise<void>;
-storage.Tables.get(id: string): Promise<Object>;
-storage.Tables.export(tableId: string, options: Object = {}): Promise<Array<any>>;
-storage.Tables.delete(id: string): Promise<Object>;
+storage.Tables.get(id: string): Promise<any>;
+storage.Tables.export(tableId: string, options: Object = {}): Promise<any>;
+storage.Tables.delete(id: string): Promise<any>;
 ```
 
 

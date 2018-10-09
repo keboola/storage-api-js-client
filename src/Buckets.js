@@ -9,11 +9,11 @@ export default class Buckets {
     this.storage = storage;
   }
 
-  create(stage: "in" | "out", name: string, options: Object = {}): Promise<Object> {
+  create(stage: "in" | "out", name: string, options: Object = {}): Promise<any> {
     return this.storage.request('post', 'buckets', _.merge({ stage, name }, options));
   }
 
-  list(include: ?Array<string>): Promise<Array<Object>> {
+  list(include: ?Array<string>): Promise<any> {
     let uri = 'buckets';
     if (include && _.size(include) > 0) {
       uri += `?${include.join(',')}`;
@@ -21,11 +21,11 @@ export default class Buckets {
     return this.storage.request('get', uri);
   }
 
-  get(id: string): Promise<Object> {
+  get(id: string): Promise<any> {
     return this.storage.request('get', `buckets/${id}`);
   }
 
-  delete(id: string, force: boolean = false): Promise<Object> {
+  delete(id: string, force: boolean = false): Promise<any> {
     let uri = `buckets/${id}`;
     if (force) {
       uri += '?force=1';

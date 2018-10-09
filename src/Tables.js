@@ -72,7 +72,7 @@ export default class Tables {
     return _.reduce(csvSlices);
   }
 
-  delete(id: string): Promise<Object> {
+  delete(id: string): Promise<any> {
     return this.storage.request('delete', `tables/${id}`);
   }
 }
