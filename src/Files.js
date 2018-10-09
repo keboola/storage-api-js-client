@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import Storage from './Storage';
 
-class Files {
+export default class Files {
   storage: Storage;
 
   constructor(storage: Object) {
@@ -23,5 +23,3 @@ class Files {
     return this.storage.request('get', uri);
   }
 }
-
-module.exports = Files;

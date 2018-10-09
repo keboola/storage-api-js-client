@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import Storage from './Storage';
 
-class Configurations {
+export default class Configurations {
   storage: Storage;
 
   constructor(storage: Object) {
@@ -47,5 +47,3 @@ class Configurations {
     return this.storage.request('delete', `components/${componentName}/configs/${id}`);
   }
 }
-
-module.exports = Configurations;

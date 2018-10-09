@@ -10,7 +10,7 @@ const aws = require('aws-sdk');
 
 axiosRetry(axios, { retries: 5 });
 
-class Tables {
+export default class Tables {
   storage: Storage;
 
   constructor(storage: Object) {
@@ -76,5 +76,3 @@ class Tables {
     return this.storage.request('delete', `tables/${id}`);
   }
 }
-
-module.exports = Tables;

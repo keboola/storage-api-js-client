@@ -35,9 +35,9 @@ describe('Storage.Tables', () => {
   let tableName;
   let tableId;
   beforeEach(() => {
-    bucketName = `bucket-${_.random(1000, 2000)}`;
+    bucketName = `bucket-${_.random(1000, 20000)}`;
     bucketId = `in.c-${bucketName}`;
-    tableName = `table-${_.random(1000, 2000)}`;
+    tableName = `table-${_.random(1000, 20000)}`;
     tableId = `${bucketId}.${tableName}`;
     return storage.request('post', 'buckets', { stage: 'in', name: bucketName });
   });

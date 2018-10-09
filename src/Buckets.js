@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import Storage from './Storage';
 
-class Buckets {
+export default class Buckets {
   storage: Storage;
 
   constructor(storage: Object) {
@@ -25,5 +25,3 @@ class Buckets {
     return this.storage.request('delete', uri);
   }
 }
-
-module.exports = Buckets;

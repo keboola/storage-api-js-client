@@ -4,7 +4,7 @@ import createError from 'http-errors';
 import sleep from 'sleep-promise';
 import Storage from './Storage';
 
-class Jobs {
+export default class Jobs {
   storage: Storage;
 
   constructor(storage: Object) {
@@ -26,5 +26,3 @@ class Jobs {
     throw createError(400, `Storage job ${id} failed with error ${JSON.stringify(res)}`);
   }
 }
-
-module.exports = Jobs;
