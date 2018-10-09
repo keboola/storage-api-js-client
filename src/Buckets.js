@@ -13,10 +13,10 @@ export default class Buckets {
     return this.storage.request('post', 'buckets', _.merge({ stage, name }, options));
   }
 
-  list(include: ?Array<string>): Promise<any> {
+  list(include: ?Array<"attributes" | "metadata" | "linkedBuckets">): Promise<any> {
     let uri = 'buckets';
     if (include && _.size(include) > 0) {
-      uri += `?${include.join(',')}`;
+      uri += `?include=${include.join(',')}`;
     }
     return this.storage.request('get', uri);
   }

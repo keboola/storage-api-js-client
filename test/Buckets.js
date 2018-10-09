@@ -43,7 +43,7 @@ describe('Storage.Buckets', () => {
     if (_.size(res) > 0) {
       expect(res, 'to have items satisfying', (item) => {
         expect(item, 'to have key', 'id');
-        expect(item.id, 'no to be', bucketId);
+        expect(item.id, 'not to be', bucketId);
       });
     }
 
@@ -52,6 +52,14 @@ describe('Storage.Buckets', () => {
     expect(res2, 'to have an item satisfying', (item) => {
       expect(item, 'to have key', 'id');
       expect(item.id, 'to be', bucketId);
+      expect(item, 'not to have key', 'metadata');
+    });
+
+    const res3 = await expect(storage.Buckets.list(['metadata']), 'to be fulfilled');
+    expect(res3, 'to have an item satisfying', (item) => {
+      expect(item, 'to have key', 'id');
+      expect(item.id, 'to be', bucketId);
+      expect(item, 'to have key', 'metadata');
     });
 
     await storage.request('delete', `buckets/${bucketId}`);
