@@ -13,6 +13,14 @@ export default class Buckets {
     return this.storage.request('post', 'buckets', _.merge({ stage, name }, options));
   }
 
+  list(include: ?Array<string>): Promise<Array<Object>> {
+    let uri = 'buckets';
+    if (include && _.size(include) > 0) {
+      uri += `?${include.join(',')}`;
+    }
+    return this.storage.request('get', uri);
+  }
+
   get(id: string): Promise<Object> {
     return this.storage.request('get', `buckets/${id}`);
   }

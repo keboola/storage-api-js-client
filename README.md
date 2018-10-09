@@ -25,6 +25,7 @@ storage.request('get', 'buckets/bucket_id/tables')
 // Or use helper methods
 storage.Buckets.create(stage: "in" | "out", name: string, options: Object = {}): Promise<Object>;
 storage.Buckets.get(id: string): Promise<Object>;
+storage.Buckets.list(include: ?Array<string>): Promise<Array<Object>>;
 storage.Buckets.delete(id: string, force: boolean = false): Promise<Object>;
 
 storage.Configurations.create(componentName: string, name: string, options: ?{ configurationId: ?string, description: ?string, configuration: ?Object, state: ?Object, changeDescription: ?string }): Promise<string>;
