@@ -39,11 +39,11 @@ export default class Configurations {
     return res.id;
   }
 
-  get(componentName: string, id: string): Promise<Object> {
+  get(componentName: string, id: string): Promise<any> {
     return this.storage.request('get', `components/${componentName}/configs/${id}`);
   }
 
-  delete(componentName: string, id: string): Promise<Object> {
+  delete(componentName: string, id: string): Promise<any> {
     return this.storage.request('delete', `components/${componentName}/configs/${id}`);
   }
 }

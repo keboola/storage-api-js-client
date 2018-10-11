@@ -38,7 +38,7 @@ export default class Storage {
     this.Tables = new Tables(this);
   }
 
-  async request(method: string, uri: string, data: any = null): Promise<Object> {
+  async request(method: string, uri: string, data: any = null): Promise<any> {
     const url = `${this.baseUri}/v2/storage/${uri}`;
     const params = {
       method,
@@ -62,11 +62,11 @@ export default class Storage {
     }
   }
 
-  verifyToken(): Promise<Object> {
+  verifyToken(): Promise<any> {
     return this.request('get', 'tokens/verify');
   }
 
-  async verifyTokenAdmin(): Promise<Object> {
+  async verifyTokenAdmin(): Promise<any> {
     const auth = await this.verifyToken();
     if (!_.has(auth, 'admin')) {
       Promise.reject(createError(403, 'You need a master Storage token'));

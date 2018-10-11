@@ -9,13 +9,13 @@ export default class Files {
     this.storage = storage;
   }
 
-  prepare(name: string, options: Object = {}): Promise<Object> {
+  prepare(name: string, options: Object = {}): Promise<any> {
     const data = _.merge({ name }, options);
     data.federationToken = true;
     return this.storage.request('post', 'files/prepare', data);
   }
 
-  get(id: string, federationToken: boolean = false): Promise<Object> {
+  get(id: string, federationToken: boolean = false): Promise<any> {
     let uri = `files/${id}`;
     if (federationToken) {
       uri += '?federationToken=1';

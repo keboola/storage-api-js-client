@@ -42,6 +42,14 @@ export default class Tables {
     return this.storage.Jobs.wait(requestResult.id);
   }
 
+  list(bucket: string, include: ?Array<"attributes" | "columns">): Promise<any> {
+    let uri = `buckets/${bucket}/tables`;
+    if (include && _.size(include) > 0) {
+      uri += `?include=${include.join(',')}`;
+    }
+    return this.storage.request('get', uri);
+  }
+
   get(id: string): Promise<Object> {
     return this.storage.request('get', `tables/${id}`);
   }
@@ -72,7 +80,7 @@ export default class Tables {
     return _.reduce(csvSlices);
   }
 
-  delete(id: string): Promise<Object> {
+  delete(id: string): Promise<any> {
     return this.storage.request('delete', `tables/${id}`);
   }
 }

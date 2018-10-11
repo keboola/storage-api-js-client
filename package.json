@@ -1,6 +1,6 @@
 {
   "name": "@keboola/storage-api-js-client",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Javascript client for Keboola Storage API",
   "repository": "https://github.com/keboola/storage-api-js-client",
   "author": "Jakub Matejka <jakub@keboola.com>",
