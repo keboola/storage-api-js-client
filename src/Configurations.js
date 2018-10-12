@@ -1,5 +1,6 @@
 // @flow
 import _ from 'lodash';
+import QueryString from 'querystring';
 import Storage from './Storage';
 
 export default class Configurations {
@@ -45,5 +46,36 @@ export default class Configurations {
 
   delete(componentName: string, id: string): Promise<any> {
     return this.storage.request('delete', `components/${componentName}/configs/${id}`);
+  }
+
+  listComponents(componentType: ?string, include: ?Array<'configuration' | 'rows'>, isDeleted: ?boolean) {
+    const params = {};
+    if (componentType != null) {
+      params.componentType = componentType;
+    }
+    if (include != null) {
+      params.include = include;
+    }
+    if (isDeleted != null) {
+      params.isDeleted = isDeleted;
+    }
+    let uri = 'components';
+    if (_.size(params)) {
+      uri += `?${QueryString.stringify(params)}`;
+    }
+
+    return this.storage.request('get', uri);
+  }
+
+  list(component: string, isDeleted: ?boolean) {
+    const params = {};
+    if (isDeleted != null) {
+      params.isDeleted = isDeleted;
+    }
+    let uri = `components/${component}/configs`;
+    if (_.size(params)) {
+      uri += `?${QueryString.stringify(params)}`;
+    }
+    return this.storage.request('get', uri);
   }
 }

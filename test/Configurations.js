@@ -29,15 +29,11 @@ describe('Storage.Configurations', () => {
   it('get', async () => {
     await expect(storage.Configurations.get(component, config2), 'to be rejected');
 
-    await storage.request(
-      'post',
-      `components/${component}/configs`,
-      {
-        configurationId: config2,
-        name: config2,
-        configuration: JSON.stringify({ test: true }),
-      }
-    );
+    await storage.request('post', `components/${component}/configs`, {
+      configurationId: config2,
+      name: config2,
+      configuration: JSON.stringify({ test: true }),
+    });
 
     const res = await expect(storage.Configurations.get(component, config2), 'to be fulfilled');
     expect(res, 'to have key', 'configuration');
@@ -49,17 +45,34 @@ describe('Storage.Configurations', () => {
 
   const config3 = `c3-${_.random(1000, 90000)}`;
   it('delete', async () => {
-    await storage.request(
-      'post',
-      `components/${component}/configs`,
-      {
-        configurationId: config3,
-        name: config3,
-      }
-    );
+    await storage.request('post', `components/${component}/configs`, {
+      configurationId: config3,
+      name: config3,
+    });
 
     await expect(storage.Configurations.delete(component, config3), 'to be fulfilled');
 
     await expect(storage.request('get', `components/${component}/configs/${config1}`), 'to be rejected');
+  });
+
+  const config4 = `c4-${_.random(1000, 90000)}`;
+  it('list', async () => {
+    await storage.request('post', `components/${component}/configs`, {
+      configurationId: config4,
+      name: config4,
+    });
+
+    const res = await expect(storage.Configurations.listComponents(), 'to be fulfilled');
+    expect(_.size(res), 'to be greater than', 0);
+    expect(res, 'to have an item satisfying', (i) => {
+      expect(i.id, 'to be', component);
+    });
+
+    const res2 = await expect(storage.Configurations.list(component), 'to be fulfilled');
+    expect(res2, 'to have length', 1);
+    expect(res2[0], 'to have key', 'id');
+    expect(res2[0].id, 'to be', config4);
+
+    await storage.request('delete', `components/${component}/configs/${config4}`);
   });
 });
