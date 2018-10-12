@@ -54,7 +54,7 @@ export default class Configurations {
       params.componentType = componentType;
     }
     if (include != null) {
-      params.include = include;
+      params.include = include.join(',');
     }
     if (isDeleted != null) {
       params.isDeleted = isDeleted;

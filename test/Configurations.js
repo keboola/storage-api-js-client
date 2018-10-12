@@ -6,6 +6,17 @@ const expect = require('unexpected');
 describe('Storage.Configurations', () => {
   const storage = new Storage(process.env.KBC_URL, process.env.KBC_TOKEN);
 
+  beforeEach(async () => {
+    const components = await storage.request('get', 'components?include=configuration');
+    const configPromises = [];
+    _.each(components, (component) => {
+      _.each(component.configurations, (configuration) => {
+        configPromises.push(storage.request('delete', `components/${component}/configs/${configuration}`));
+      });
+    });
+    await Promise.all(configPromises);
+  });
+
   const component = process.env.KBC_COMPONENT;
   const config1 = `c1-${_.random(1000, 90000)}`;
   it('create', async () => {
