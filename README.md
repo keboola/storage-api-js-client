@@ -31,6 +31,8 @@ storage.Buckets.delete(id: string, force: boolean = false): Promise<any>;
 storage.Configurations.create(componentName: string, name: string, options: ?{ configurationId: ?string, description: ?string, configuration: ?Object, state: ?Object, changeDescription: ?string }): Promise<string>;
 storage.Configurations.get(componentName: string, id: string): Promise<any>;
 storage.Configurations.delete(componentName: string, id: string): Promise<any>;
+storage.Configurations.listComponents(componentType: ?string, include: ?Array<'configuration' | 'rows'>, isDeleted: ?boolean);
+storage.Configurations.list(component: string, isDeleted: ?boolean);
 
 storage.Files.prepare(name: string, options: Object = {}): Promise<any>;
 storage.Files.get(id: string, federationToken: boolean = false): Promise<any>;
