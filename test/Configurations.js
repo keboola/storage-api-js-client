@@ -11,7 +11,7 @@ describe('Storage.Configurations', () => {
     const configPromises = [];
     _.each(components, (component) => {
       _.each(component.configurations, (configuration) => {
-        configPromises.push(storage.request('delete', `components/${component}/configs/${configuration}`));
+        configPromises.push(storage.request('delete', `components/${component.id}/configs/${configuration.id}`));
       });
     });
     await Promise.all(configPromises);
