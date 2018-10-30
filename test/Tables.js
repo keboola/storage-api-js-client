@@ -61,7 +61,7 @@ describe('Storage.Tables', () => {
     await storage.Tables.create(bucketId, 'table', `${__dirname}/sample.csv`, {});
     const res = await storage.Tables.import(`${bucketId}.table`, `${__dirname}/sample.csv`, { incremental: true });
     expect(res, 'to have key', 'results');
-    expect(res.results, 'to have key', 'importedColumns')
+    expect(res.results, 'to have key', 'importedColumns');
     expect(res.results.importedColumns, 'to equal', ['id', 'name', 'price', 'date', 'info', 'category']);
     expect(res.results, 'to have key', 'totalRowsCount');
     expect(res.results.totalRowsCount, 'to be', 10);
@@ -71,7 +71,7 @@ describe('Storage.Tables', () => {
     await storage.Tables.create(bucketId, 'table', `${__dirname}/sample.csv`, {});
     const res = await storage.Tables.import(`${bucketId}.table`, `${__dirname}/sample.csv`, { incremental: false });
     expect(res, 'to have key', 'results');
-    expect(res.results, 'to have key', 'importedColumns')
+    expect(res.results, 'to have key', 'importedColumns');
     expect(res.results.importedColumns, 'to equal', ['id', 'name', 'price', 'date', 'info', 'category']);
     expect(res.results, 'to have key', 'totalRowsCount');
     expect(res.results.totalRowsCount, 'to be', 10);
