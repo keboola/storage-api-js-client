@@ -1,6 +1,6 @@
 {
   "name": "@keboola/storage-api-js-client",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Javascript client for Keboola Storage API",
   "repository": "https://github.com/keboola/storage-api-js-client",
   "author": "Jakub Matejka <jakub@keboola.com>",
@@ -9,6 +9,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@babel/runtime": "^7.1.2",
     "aws-sdk": "^2.236.1",
     "axios": "^0.18.0",
     "axios-retry": "^3.1.0",
@@ -25,7 +26,6 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-flow": "^7.0.0",
     "@babel/register": "^7.0.0",
-    "@babel/runtime": "^7.1.2",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
     "eslint": "^5.4.0",

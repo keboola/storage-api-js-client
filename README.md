@@ -14,8 +14,10 @@ Tables import and export is processed in-memory so it is suitable rather for sma
 
 ### Usage
 
+You can use ES6 imports (`import Storage from '@keboola/storage-api-js-client';`) or require (`const Storage = require('@keboola/storage-api-js-client').default;`).
+
 ```javascript
-const { Storage } = require('@keboola/storage-api-js-client');
+const Storage = require('@keboola/storage-api-js-client').default;
 const storage = new Storage('https://connection.keboola.com', 'TOKEN');
 
 // You can call any request directly
