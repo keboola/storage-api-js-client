@@ -42,6 +42,30 @@ export default class Tables {
     return this.storage.Jobs.wait(requestResult.id);
   }
 
+  async import(tableId: string, filePath: string, options: Object = {}): Promise<void> {
+    const file = await this.storage.Files.prepare(tableId, { federationToken: 1 });
+    const s3 = new aws.S3({
+      accessKeyId: file.uploadParams.credentials.AccessKeyId,
+      secretAccessKey: file.uploadParams.credentials.SecretAccessKey,
+      sessionToken: file.uploadParams.credentials.SessionToken,
+    });
+    await s3.putObject({
+      Bucket: file.uploadParams.bucket,
+      Key: file.uploadParams.key,
+      Body: fs.readFileSync(filePath),
+    }).promise();
+
+    const requestResult = await this.storage.request(
+      'post',
+      `tables/${tableId}/import-async`,
+      _.merge({
+        dataFileId: file.id,
+      }, options)
+    );
+
+    return this.storage.Jobs.wait(requestResult.id);
+  }
+
   list(bucket: string, include: ?Array<"attributes" | "columns">): Promise<any> {
     let uri = `buckets/${bucket}/tables`;
     if (include && _.size(include) > 0) {
