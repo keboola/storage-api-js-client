@@ -69,7 +69,7 @@ export default class Storage {
   async verifyTokenAdmin(): Promise<any> {
     const auth = await this.verifyToken();
     if (!_.has(auth, 'admin')) {
-      Promise.reject(createError(403, 'You need a master Storage token'));
+      throw createError(403, 'You need a master Storage token');
     }
     return auth;
   }
