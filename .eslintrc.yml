@@ -15,6 +15,7 @@
   "rules": {
     "strict": 0,
     "import/no-extraneous-dependencies": 0,
+    "import/no-cycle": 0,
     "max-len": ["error", {
       "code": 120,
       "ignoreComments": true,

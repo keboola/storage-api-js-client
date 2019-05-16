@@ -41,26 +41,26 @@ describe('Storage.Buckets', () => {
     const res = await expect(storage.Buckets.list(), 'to be fulfilled');
     expect(res, 'to be an', 'array');
     if (_.size(res) > 0) {
-      expect(res, 'to have items satisfying', (item) => {
+      expect(res, 'to have items satisfying', expect.it((item) => {
         expect(item, 'to have key', 'id');
         expect(item.id, 'not to be', bucketId);
-      });
+      }));
     }
 
     await storage.request('post', 'buckets', { stage: 'in', name: bucketName });
     const res2 = await expect(storage.Buckets.list(), 'to be fulfilled');
-    expect(res2, 'to have an item satisfying', (item) => {
+    expect(res2, 'to have an item satisfying', expect.it((item) => {
       expect(item, 'to have key', 'id');
       expect(item.id, 'to be', bucketId);
       expect(item, 'not to have key', 'metadata');
-    });
+    }));
 
     const res3 = await expect(storage.Buckets.list(['metadata']), 'to be fulfilled');
-    expect(res3, 'to have an item satisfying', (item) => {
+    expect(res3, 'to have an item satisfying', expect.it((item) => {
       expect(item, 'to have key', 'id');
       expect(item.id, 'to be', bucketId);
       expect(item, 'to have key', 'metadata');
-    });
+    }));
 
     await storage.request('delete', `buckets/${bucketId}`);
   });

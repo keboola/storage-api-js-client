@@ -1,12 +1,11 @@
 // @flow
 import _ from 'lodash';
+import aws from 'aws-sdk';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-import csvString from 'csv-string';
+import parse from 'csv-parse/lib/sync';
 import fs from 'fs';
 import Storage from './Storage';
-
-const aws = require('aws-sdk');
 
 axiosRetry(axios, { retries: 5 });
 
@@ -78,6 +77,11 @@ export default class Tables {
     return this.storage.request('get', `tables/${id}`);
   }
 
+  async preview(tableId: string, options: Object = {}): Promise<Array<any>> {
+    const res = await this.storage.request('get', `tables/${tableId}/data-preview`, options);
+    return parse(res, { columns: true });
+  }
+
   async export(tableId: string, options: Object = {}): Promise<Array<any>> {
     const requestRes = await this.storage.request('post', `tables/${tableId}/export-async`, options);
     const jobRes = await this.storage.Jobs.wait(requestRes.id);
@@ -99,9 +103,14 @@ export default class Tables {
       Bucket: file.s3Path.bucket,
       Key: sliceUrl.substr(sliceUrl.indexOf('/', 5) + 1),
     }).promise()));
+
+    // Read contents of all slice files
     const csvFiles = _.map(s3Files, s3File => s3File.Body.toString('utf8'));
-    const csvSlices = _.map(csvFiles, csvFile => csvString.parse(csvFile));
-    return _.reduce(csvSlices);
+
+    // Parse csv of each slice to array
+    const csvSlices = _.map(csvFiles, csvFile => parse(csvFile), 1);
+    // Union all arrays
+    return _.flatten(csvSlices);
   }
 
   delete(id: string): Promise<any> {
