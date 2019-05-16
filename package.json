@@ -1,6 +1,6 @@
 {
   "name": "@keboola/storage-api-js-client",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "description": "Javascript client for Keboola Storage API",
   "repository": "https://github.com/keboola/storage-api-js-client",
   "author": "Jakub Matejka <jakub@keboola.com>",
@@ -13,7 +13,7 @@
     "aws-sdk": "^2.236.1",
     "axios": "^0.18.0",
     "axios-retry": "^3.1.0",
-    "csv-string": "^3.1.2",
+    "csv-parse": "^4.4.1",
     "http-errors": "^1.7.0",
     "lodash": "^4.17.10",
     "qs": "^6.7.0",
@@ -30,13 +30,13 @@
     "babel-loader": "^8.0.4",
     "eslint": "^5.4.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-flowtype": "^2.50.3",
-    "eslint-plugin-flowtype-errors": "^3.6.0",
+    "eslint-plugin-flowtype": "^3.9.0",
+    "eslint-plugin-flowtype-errors": "^4.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "flow-bin": "^0.82.0",
+    "flow-bin": "^0.98.1",
     "flow-copy-source": "^2.0.2",
-    "mocha": "^5.1.1",
-    "unexpected": "^10.37.7"
+    "mocha": "^6.1.4",
+    "unexpected": "^11.5.1"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --bail --exit --timeout 0 --require @babel/register --require source-map-support test",

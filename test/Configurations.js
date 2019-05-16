@@ -75,9 +75,9 @@ describe('Storage.Configurations', () => {
 
     const res = await expect(storage.Configurations.listComponents(), 'to be fulfilled');
     expect(_.size(res), 'to be greater than', 0);
-    expect(res, 'to have an item satisfying', (i) => {
+    expect(res, 'to have an item satisfying', expect.it((i) => {
       expect(i.id, 'to be', component);
-    });
+    }));
 
     const res2 = await expect(storage.Configurations.list(component), 'to be fulfilled');
     expect(res2, 'to have length', 1);
