@@ -3,7 +3,7 @@ import _ from 'lodash';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import createError from 'http-errors';
-import QueryString from 'querystring';
+import qs from 'qs';
 
 import Buckets from './Buckets';
 import Configurations from './Configurations';
@@ -44,7 +44,7 @@ export default class Storage {
       method,
       url,
       headers: { 'X-StorageApi-Token': this.token },
-      data: data ? QueryString.stringify(data) : null,
+      data: data ? qs.stringify(data) : null,
     };
     try {
       const res = await axios(params);

@@ -1,6 +1,6 @@
 // @flow
 import _ from 'lodash';
-import QueryString from 'querystring';
+import qs from 'qs';
 import Storage from './Storage';
 
 export default class Configurations {
@@ -61,7 +61,7 @@ export default class Configurations {
     }
     let uri = 'components';
     if (_.size(params)) {
-      uri += `?${QueryString.stringify(params)}`;
+      uri += `?${qs.stringify(params)}`;
     }
 
     return this.storage.request('get', uri);
@@ -74,7 +74,7 @@ export default class Configurations {
     }
     let uri = `components/${component}/configs`;
     if (_.size(params)) {
-      uri += `?${QueryString.stringify(params)}`;
+      uri += `?${qs.stringify(params)}`;
     }
     return this.storage.request('get', uri);
   }
