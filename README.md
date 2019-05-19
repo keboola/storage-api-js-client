@@ -52,7 +52,7 @@ storage.Tables.delete(id: string): Promise<any>;
 
 You need to set some env variables for the tests:
 - `KBC_URL`
-- `KBC_TOKEN` - a *master* token
+- `KBC_TOKEN` - a *master* token to a testing project. **Please note that the project will be wiped out during the tests.**
 - `KBC_COMPONENT` - name of some component used for Components Configurations API tests
 Tests can be run using `yarn test`.
 

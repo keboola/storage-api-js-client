@@ -5,6 +5,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import parse from 'csv-parse/lib/sync';
 import fs from 'fs';
+import qs from 'qs';
 import Storage from './Storage';
 
 axiosRetry(axios, { retries: 5 });
@@ -78,7 +79,11 @@ export default class Tables {
   }
 
   async preview(tableId: string, options: Object = {}): Promise<Array<any>> {
-    const res = await this.storage.request('get', `tables/${tableId}/data-preview`, options);
+    let uri = `tables/${tableId}/data-preview`;
+    if (_.size(options)) {
+      uri += `?${qs.stringify(options)}`;
+    }
+    const res = await this.storage.request('get', uri);
     return parse(res, { columns: true });
   }
 

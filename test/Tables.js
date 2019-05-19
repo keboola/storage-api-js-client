@@ -106,12 +106,12 @@ describe('Storage.Tables', () => {
   it('preview', async () => {
     await createTestTable(storage, bucketId, tableName);
     await expect(storage.request('get', `tables/${tableId}`), 'to be fulfilled');
-    const res = await storage.Tables.preview(tableId);
+    const res = await storage.Tables.preview(tableId, { columns: 'id,name' });
     expect(res, 'to be a', 'array');
     expect(_.keys(res), 'to have length', 5);
     expect(res[0], 'to have key', 'id');
     expect(res[0], 'to have key', 'name');
-    expect(res[0], 'to have key', 'price');
+    expect(res[0], 'not to have key', 'price');
   });
 
   it('export', async () => {
