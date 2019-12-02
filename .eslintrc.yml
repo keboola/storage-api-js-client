@@ -1,6 +1,6 @@
 {
   "extends": [
-    "airbnb-base",
+    "@keboola/node",
     "plugin:flowtype/recommended"
   ],
   "plugins": [
@@ -13,25 +13,7 @@
     "mocha": true
   },
   "rules": {
-    "strict": 0,
-    "import/no-extraneous-dependencies": 0,
     "import/no-cycle": 0,
-    "max-len": ["error", {
-      "code": 120,
-      "ignoreComments": true,
-      "ignoreTrailingComments": true,
-      "ignoreUrls": true,
-      "ignoreStrings": true,
-      "ignoreTemplateLiterals": true,
-      "ignoreRegExpLiterals": true
-    }],
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "ignore"
-    }],
     "flowtype-errors/show-errors": 2,
     "flowtype-errors/show-warnings": 1
   }
