@@ -44,6 +44,7 @@ storage.Tables.get(id: string): Promise<any>;
 storage.Tables.list(bucket: string, include: ?Array<"attributes" | "columns">): Promise<any>;
 storage.Tables.import(tableId: string, filePath: string, options: Object = {}): Promise<void>;
 storage.Tables.export(tableId: string, options: Object = {}): Promise<any>;
+storage.Tables.exportToFile(tableId: string, options: Object = {}, path: string): Promise<any>;
 storage.Tables.delete(id: string): Promise<any>;
 ```
 

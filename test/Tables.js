@@ -4,8 +4,40 @@ const _ = require('lodash');
 const aws = require('aws-sdk');
 const fs = require('fs');
 const expect = require('unexpected');
+const os = require('os');
+const { execSync } = require('child_process');
+const stream = require('stream');
+const util = require('util');
 
-function createTestTable(storage, bucket, table) {
+const streamFinished = util.promisify(stream.finished);
+
+class FileStream {
+  constructor(filename) {
+    this.file = fs.createWriteStream(filename, { flags: 'a' });
+  }
+
+  async writeRow(row) {
+    await new Promise((res, rej) => {
+      this.file.write(`${row}\n`, (err) => {
+        if (err) {
+          rej(err);
+        }
+        res();
+      });
+    });
+  }
+
+  async close() {
+    this.file.end();
+    await streamFinished(this.file);
+  }
+
+  static delete(filename) {
+    fs.unlinkSync(filename);
+  }
+}
+
+function createTestTable(storage, bucket, table, customFile = null) {
   return storage.Files.prepare(`${bucket}.${table}`, { federationToken: 1 })
     .then((file) => {
       const s3 = new aws.S3({
@@ -16,7 +48,7 @@ function createTestTable(storage, bucket, table) {
       return s3.putObject({
         Bucket: file.uploadParams.bucket,
         Key: file.uploadParams.key,
-        Body: fs.readFileSync(`${__dirname}/sample.csv`),
+        Body: customFile ? fs.createReadStream(customFile) : fs.readFileSync(`${__dirname}/sample.csv`),
       }).promise()
         .then(() => file.id);
     })
@@ -122,6 +154,30 @@ describe('Storage.Tables', () => {
     expect(res, 'to have length', 5);
     expect(res[0], 'to be a', 'array');
     expect(res[0], 'to have length', 6);
+  });
+
+  it('exportToFile', async () => {
+    const tempFilePath = `${os.tmpdir()}/storage-test-${Date.now()}-${_.random(1000, 9999)}`;
+    const inFilePath = `${tempFilePath}.in`;
+
+    // Create a bigger file to enforce and check proper slicing uponduring download from S3
+    const f = new FileStream(inFilePath);
+    await f.writeRow('"id","name","price","date","info","category"');
+    const longString = 'a'.repeat(10000);
+    for (let i = 1; i <= 10000; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await f.writeRow(`"r${i}","Product ${i}","${i}","2016-04-02 12:00:12","${longString}","c2"`);
+    }
+    await f.close();
+
+    await createTestTable(storage, bucketId, tableName, inFilePath);
+    await expect(storage.request('get', `tables/${tableId}`), 'to be fulfilled');
+
+    const outFilePath = `${tempFilePath}.out`;
+    await storage.Tables.exportToFile(tableId, {}, outFilePath);
+    expect(fs.existsSync(outFilePath), 'to be ok');
+    // Check proper number of rows
+    expect(execSync(`wc -l ${outFilePath} | awk '{print $1}'`).stdout.trim(), 'to be', '10000');
   });
 
   it('delete', async () => {

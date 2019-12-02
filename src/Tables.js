@@ -87,11 +87,15 @@ export default class Tables {
     return parse(res, { columns: true });
   }
 
-  async export(tableId: string, options: Object = {}): Promise<Array<any>> {
+  async getTableFile(tableId: string, options: Object = {}): Promise<any> {
     const requestRes = await this.storage.request('post', `tables/${tableId}/export-async`, options);
     const jobRes = await this.storage.Jobs.wait(requestRes.id);
     const fileId = _.get(jobRes, 'results.file.id');
-    const file = await this.storage.Files.get(fileId, true);
+    return this.storage.Files.get(fileId, true);
+  }
+
+  async export(tableId: string, options: Object = {}): Promise<Array<any>> {
+    const file = await this.getTableFile(tableId, options);
 
     const fileRes = await axios.get(file.url);
     if (!file.isSliced) {
@@ -116,6 +120,49 @@ export default class Tables {
     const csvSlices = _.map(csvFiles, (csvFile) => parse(csvFile), 1);
     // Union all arrays
     return _.flatten(csvSlices);
+  }
+
+  async exportToFile(tableId: string, options: Object = {}, filePath: string): Promise<void> {
+    const file = await this.getTableFile(tableId, options);
+
+    const fileRes = await axios.get(file.url);
+    if (!file.isSliced) {
+      fs.writeFileSync(filePath, fileRes.data);
+      return Promise.resolve();
+    }
+
+    const slices = _.map(fileRes.data.entries, (r) => r.url);
+    const s3 = new aws.S3({
+      accessKeyId: file.credentials.AccessKeyId,
+      secretAccessKey: file.credentials.SecretAccessKey,
+      sessionToken: file.credentials.SessionToken,
+    });
+
+    await Promise.all(_.map(slices, (sliceUrl) => {
+      const objectRequest = s3.getObject({
+        Bucket: file.s3Path.bucket,
+        Key: sliceUrl.substr(sliceUrl.indexOf('/', 5) + 1),
+      });
+      const outStream = fs.createWriteStream(filePath, { flags: 'a' });
+      const readStream = objectRequest.createReadStream();
+      readStream.on('error', (err) => {
+        outStream.emit('S3 Download Error', err);
+      });
+      readStream.pipe(outStream);
+      return new Promise((resolve, reject) => {
+        outStream.on('end', () => {
+          resolve();
+        });
+        outStream.on('finish', () => {
+          resolve();
+        });
+        outStream.on('error', (error) => {
+          reject(error);
+        });
+      });
+    }));
+
+    return Promise.resolve();
   }
 
   delete(id: string): Promise<any> {
