@@ -177,7 +177,7 @@ describe('Storage.Tables', () => {
     await storage.Tables.exportToFile(tableId, {}, outFilePath);
     expect(fs.existsSync(outFilePath), 'to be ok');
     // Check proper number of rows
-    expect(execSync(`wc -l ${outFilePath} | awk '{print $1}'`).stdout.trim(), 'to be', '10000');
+    expect(execSync(`wc -l ${outFilePath} | awk '{print $1}'`).trim(), 'to be', '10000');
   });
 
   it('delete', async () => {
