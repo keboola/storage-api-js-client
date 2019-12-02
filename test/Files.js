@@ -16,7 +16,7 @@ describe('Storage.Files', () => {
       expect(res.name, 'to be', 'test.csv');
       return res.id;
     })
-    .then(id => storage.request('delete', `files/${id}`)));
+    .then((id) => storage.request('delete', `files/${id}`)));
 
   it('get', () => storage.request('post', 'files/prepare', { name: 'test.txt', federationToken: 1 })
     .then((file) => {
@@ -32,6 +32,6 @@ describe('Storage.Files', () => {
       }).promise()
         .then(() => file.id);
     })
-    .then(id => storage.Files.get(id, true)
+    .then((id) => storage.Files.get(id, true)
       .then(() => storage.request('delete', `files/${id}`))));
 });

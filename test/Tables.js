@@ -20,11 +20,11 @@ function createTestTable(storage, bucket, table) {
       }).promise()
         .then(() => file.id);
     })
-    .then(res => storage.request('post', `buckets/${bucket}/tables-async`, {
+    .then((res) => storage.request('post', `buckets/${bucket}/tables-async`, {
       name: table,
       dataFileId: res,
     }))
-    .then(res => storage.Jobs.wait(res.id));
+    .then((res) => storage.Jobs.wait(res.id));
 }
 
 describe('Storage.Tables', () => {

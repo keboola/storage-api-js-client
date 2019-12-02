@@ -98,22 +98,22 @@ export default class Tables {
       return fileRes.data;
     }
 
-    const slices = _.map(fileRes.data.entries, r => r.url);
+    const slices = _.map(fileRes.data.entries, (r) => r.url);
     const s3 = new aws.S3({
       accessKeyId: file.credentials.AccessKeyId,
       secretAccessKey: file.credentials.SecretAccessKey,
       sessionToken: file.credentials.SessionToken,
     });
-    const s3Files = await Promise.all(_.map(slices, sliceUrl => s3.getObject({
+    const s3Files = await Promise.all(_.map(slices, (sliceUrl) => s3.getObject({
       Bucket: file.s3Path.bucket,
       Key: sliceUrl.substr(sliceUrl.indexOf('/', 5) + 1),
     }).promise()));
 
     // Read contents of all slice files
-    const csvFiles = _.map(s3Files, s3File => s3File.Body.toString('utf8'));
+    const csvFiles = _.map(s3Files, (s3File) => s3File.Body.toString('utf8'));
 
     // Parse csv of each slice to array
-    const csvSlices = _.map(csvFiles, csvFile => parse(csvFile), 1);
+    const csvSlices = _.map(csvFiles, (csvFile) => parse(csvFile), 1);
     // Union all arrays
     return _.flatten(csvSlices);
   }
