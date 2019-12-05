@@ -3,8 +3,10 @@ import _ from 'lodash';
 import aws from 'aws-sdk';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
+import { execSync } from 'child_process';
 import parse from 'csv-parse/lib/sync';
 import fs from 'fs';
+import os from 'os';
 import qs from 'qs';
 import Storage from './Storage';
 
@@ -138,12 +140,18 @@ export default class Tables {
       sessionToken: file.credentials.SessionToken,
     });
 
+    const tempDir = `${os.tmpdir()}/storage-${Date.now()}-${_.random(1000, 9999)}`;
+    fs.mkdirSync(tempDir);
+
+    let i = 0;
     await Promise.all(_.map(slices, (sliceUrl) => {
+      const current = i;
+      i += 1;
       const objectRequest = s3.getObject({
         Bucket: file.s3Path.bucket,
         Key: sliceUrl.substr(sliceUrl.indexOf('/', 5) + 1),
       });
-      const outStream = fs.createWriteStream(filePath, { flags: 'a' });
+      const outStream = fs.createWriteStream(`${tempDir}/${current}`);
       const readStream = objectRequest.createReadStream();
       readStream.on('error', (err) => {
         outStream.emit('S3 Download Error', err);
@@ -162,6 +170,8 @@ export default class Tables {
       });
     }));
 
+    execSync(`cat ${tempDir}/* > ${filePath}`);
+    execSync(`rm -rf ${tempDir}`);
     return Promise.resolve();
   }
 
