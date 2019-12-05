@@ -2,10 +2,10 @@ import Storage from '../src/Storage';
 
 const _ = require('lodash');
 const aws = require('aws-sdk');
+const csv = require('fast-csv');
 const fs = require('fs');
 const expect = require('unexpected');
 const os = require('os');
-const { execSync } = require('child_process');
 const stream = require('stream');
 const util = require('util');
 
@@ -164,7 +164,7 @@ describe('Storage.Tables', () => {
     const f = new FileStream(inFilePath);
     await f.writeRow('"id","name","price","date","info","category"');
     const longString = 'a'.repeat(10000);
-    for (let i = 1; i <= 10000; i += 1) {
+    for (let i = 1; i <= 50000; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       await f.writeRow(`"r${i}","Product ${i}","${i}","2016-04-02 12:00:12","${longString}","c2"`);
     }
@@ -176,8 +176,21 @@ describe('Storage.Tables', () => {
     const outFilePath = `${tempFilePath}.out`;
     await storage.Tables.exportToFile(tableId, {}, outFilePath);
     expect(fs.existsSync(outFilePath), 'to be ok');
-    // Check proper number of rows
-    expect(execSync(`wc -l ${outFilePath} | awk '{print $1}'`, { encoding: 'utf-8' }).trim(), 'to be', '10000');
+
+    // Parse every row with csv parser to check that the file is well formed
+    // Check rows count
+    let rowsCount = 0;
+    await new Promise((res, rej) => {
+      fs.createReadStream(outFilePath)
+        .pipe(csv.parse({ headers: ['id', 'name', 'price', 'date', 'info', 'category'] }))
+        .on('data', (row) => {
+          rowsCount += 1;
+          expect(_.size(row), 'to be', 6);
+        })
+        .on('end', () => res())
+        .on('error', (err) => rej(err));
+    });
+    expect(rowsCount, 'to be', 50000);
   });
 
   it('delete', async () => {
