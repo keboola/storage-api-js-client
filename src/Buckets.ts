@@ -1,19 +1,24 @@
-// @flow
 import _ from 'lodash';
 import Storage from './Storage';
+
+
+enum BucketListOptionConst {
+  attributes, metadata, linkedBuckets
+}
+type BucketListOption = keyof typeof BucketListOptionConst;
 
 export default class Buckets {
   storage: Storage;
 
-  constructor(storage: Object) {
+  constructor(storage: Storage) {
     this.storage = storage;
   }
 
-  create(stage: "in" | "out", name: string, options: Object = {}): Promise<any> {
+  create(stage: 'in' | 'out', name: string, options: any = {}): Promise<any> {
     return this.storage.request('post', 'buckets', _.merge({ stage, name }, options));
   }
 
-  list(include: ?Array<"attributes" | "metadata" | "linkedBuckets">): Promise<any> {
+  list(include?: Array<BucketListOption>): Promise<any> {
     let uri = 'buckets';
     if (include && _.size(include) > 0) {
       uri += `?include=${include.join(',')}`;
@@ -25,7 +30,7 @@ export default class Buckets {
     return this.storage.request('get', `buckets/${id}`);
   }
 
-  delete(id: string, force: boolean = false): Promise<any> {
+  delete(id: string, force = false): Promise<any> {
     let uri = `buckets/${id}`;
     if (force) {
       uri += '?force=1';

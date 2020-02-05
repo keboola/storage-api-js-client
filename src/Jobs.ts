@@ -1,4 +1,3 @@
-// @flow
 import _ from 'lodash';
 import createError from 'http-errors';
 import sleep from 'sleep-promise';
@@ -7,11 +6,11 @@ import Storage from './Storage';
 export default class Jobs {
   storage: Storage;
 
-  constructor(storage: Object) {
+  constructor(storage: Storage) {
     this.storage = storage;
   }
 
-  async wait(id: string, repeat: number = 1): Promise<void> {
+  async wait(id: string, repeat = 1): Promise<void> {
     if (repeat > 20) {
       throw createError(400, `Storage job ${id} has not finished even after 10 minutes, try again later.`);
     }

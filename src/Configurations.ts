@@ -1,4 +1,3 @@
-// @flow
 import _ from 'lodash';
 import qs from 'qs';
 import Storage from './Storage';
@@ -6,22 +5,22 @@ import Storage from './Storage';
 export default class Configurations {
   storage: Storage;
 
-  constructor(storage: Object) {
+  constructor(storage: Storage) {
     this.storage = storage;
   }
 
   async create(
     componentName: string,
     name: string,
-    options: ?{
-      configurationId: ?string,
-      description: ?string,
-      configuration: ?Object,
-      state: ?Object,
-      changeDescription: ?string,
+    options?: {
+      configurationId?: string;
+      description?: string;
+      configuration?: Record<string, any>;
+      state?: Record<string, any>;
+      changeDescription?: string;
     }
   ): Promise<string> {
-    let params = { name };
+    let params = { name } as any;
     if (options) {
       params = _.merge(params, options);
       if (_.has(params, 'configuration')) {
@@ -48,8 +47,8 @@ export default class Configurations {
     return this.storage.request('delete', `components/${componentName}/configs/${id}`);
   }
 
-  listComponents(componentType: ?string, include: ?Array<'configuration' | 'rows'>, isDeleted: ?boolean) {
-    const params = {};
+  listComponents(componentType?: string, include?: Array<'configuration' | 'rows'>, isDeleted?: boolean): Promise<any> {
+    const params = {} as any;
     if (componentType != null) {
       params.componentType = componentType;
     }
@@ -67,8 +66,8 @@ export default class Configurations {
     return this.storage.request('get', uri);
   }
 
-  list(component: string, isDeleted: ?boolean) {
-    const params = {};
+  list(component: string, isDeleted?: boolean): Promise<any> {
+    const params = {} as any;
     if (isDeleted != null) {
       params.isDeleted = isDeleted;
     }

@@ -57,7 +57,7 @@ You need to set some env variables for the tests:
 - `KBC_COMPONENT` - name of some component used for Components Configurations API tests
 Tests can be run using `yarn test`.
 
-The repository requires conforming to a set of coding standards based on [AirBnB code standard](https://github.com/airbnb/javascript) and [Flow type annotations](https://flow.org/en/docs/types/). Both standards are checked by ESlint. You can run the check using `yarn lint`.
+The repository requires conforming to a set of coding standards based on [AirBnB code standard](https://github.com/airbnb/javascript) checked by ESlint. You can run the check using `yarn lint`.
 
 ### Deployment
 

@@ -160,7 +160,7 @@ describe('Storage.Tables', () => {
     const tempFilePath = `${os.tmpdir()}/storage-test-${Date.now()}-${_.random(1000, 9999)}`;
     const inFilePath = `${tempFilePath}.in`;
 
-    // Create a bigger file to enforce and check proper slicing uponduring download from S3
+    // Create a bigger file to enforce and check proper slicing during download from S3
     const f = new FileStream(inFilePath);
     await f.writeRow('"id","name","price","date","info","category"');
     const longString = 'a'.repeat(10000);
