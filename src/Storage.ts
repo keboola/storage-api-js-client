@@ -1,4 +1,3 @@
-// @flow
 import _ from 'lodash';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
@@ -38,7 +37,11 @@ export default class Storage {
     this.Tables = new Tables(this);
   }
 
-  async request(method: string, uri: string, data: any = null): Promise<any> {
+  async request(
+    method: 'head' | 'get' | 'GET' | 'delete' | 'DELETE' | 'HEAD' | 'options' | 'OPTIONS' | 'post' | 'POST' | 'put' | 'PUT' | 'patch' | 'PATCH' | undefined,
+    uri: string,
+    data: object | null = null
+  ): Promise<any> {
     const url = `${this.baseUri}/v2/storage/${uri}`;
     const params = {
       method,

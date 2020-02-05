@@ -1,4 +1,3 @@
-// @flow
 import _ from 'lodash';
 import aws from 'aws-sdk';
 import axios from 'axios';
@@ -12,14 +11,20 @@ import Storage from './Storage';
 
 axiosRetry(axios, { retries: 5 });
 
+enum TableListOptionConst {
+  attributes, columns
+}
+type TableListOption = keyof typeof TableListOptionConst;
+
+
 export default class Tables {
   storage: Storage;
 
-  constructor(storage: Object) {
+  constructor(storage: Storage) {
     this.storage = storage;
   }
 
-  async create(bucket: string, name: string, filePath: string, options: Object = {}): Promise<void> {
+  async create(bucket: string, name: string, filePath: string, options: Record<string, any> = {}): Promise<void> {
     const file = await this.storage.Files.prepare(name, { federationToken: 1 });
     const s3 = new aws.S3({
       accessKeyId: file.uploadParams.credentials.AccessKeyId,
@@ -44,7 +49,7 @@ export default class Tables {
     return this.storage.Jobs.wait(requestResult.id);
   }
 
-  async import(tableId: string, filePath: string, options: Object = {}): Promise<void> {
+  async import(tableId: string, filePath: string, options: Record<string, any> = {}): Promise<void> {
     const file = await this.storage.Files.prepare(tableId, { federationToken: 1 });
     const s3 = new aws.S3({
       accessKeyId: file.uploadParams.credentials.AccessKeyId,
@@ -68,7 +73,7 @@ export default class Tables {
     return this.storage.Jobs.wait(requestResult.id);
   }
 
-  list(bucket: string, include: ?Array<"attributes" | "columns">): Promise<any> {
+  list(bucket: string, include?: Array<TableListOption>): Promise<any> {
     let uri = `buckets/${bucket}/tables`;
     if (include && _.size(include) > 0) {
       uri += `?include=${include.join(',')}`;
@@ -76,11 +81,11 @@ export default class Tables {
     return this.storage.request('get', uri);
   }
 
-  get(id: string): Promise<Object> {
+  get(id: string): Promise<any> {
     return this.storage.request('get', `tables/${id}`);
   }
 
-  async preview(tableId: string, options: Object = {}): Promise<Array<any>> {
+  async preview(tableId: string, options: Record<string, any> = {}): Promise<Array<any>> {
     let uri = `tables/${tableId}/data-preview`;
     if (_.size(options)) {
       uri += `?${qs.stringify(options)}`;
@@ -89,14 +94,14 @@ export default class Tables {
     return parse(res, { columns: true });
   }
 
-  async getTableFile(tableId: string, options: Object = {}): Promise<any> {
+  async getTableFile(tableId: string, options: Record<string, any> = {}): Promise<any> {
     const requestRes = await this.storage.request('post', `tables/${tableId}/export-async`, options);
     const jobRes = await this.storage.Jobs.wait(requestRes.id);
     const fileId = _.get(jobRes, 'results.file.id');
     return this.storage.Files.get(fileId, true);
   }
 
-  async export(tableId: string, options: Object = {}): Promise<Array<any>> {
+  async export(tableId: string, options: Record<string, any> = {}): Promise<Array<any>> {
     const file = await this.getTableFile(tableId, options);
 
     const fileRes = await axios.get(file.url);
@@ -116,15 +121,15 @@ export default class Tables {
     }).promise()));
 
     // Read contents of all slice files
-    const csvFiles = _.map(s3Files, (s3File) => s3File.Body.toString('utf8'));
+    const csvFiles = _.map(s3Files, (s3File) => (s3File.Body ? s3File.Body.toString('utf8') : null));
 
     // Parse csv of each slice to array
-    const csvSlices = _.map(csvFiles, (csvFile) => parse(csvFile), 1);
+    const csvSlices = _.map(csvFiles, (csvFile: string) => parse(csvFile));
     // Union all arrays
     return _.flatten(csvSlices);
   }
 
-  async exportToFile(tableId: string, options: Object = {}, filePath: string): Promise<void> {
+  async exportToFile(tableId: string, options: Record<string, any> = {}, filePath: string): Promise<void> {
     const file = await this.getTableFile(tableId, options);
 
     const fileRes = await axios.get(file.url);
