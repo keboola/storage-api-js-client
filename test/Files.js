@@ -1,7 +1,6 @@
+import aws from 'aws-sdk';
+import expect from 'unexpected';
 import Storage from '../src/Storage';
-
-const aws = require('aws-sdk');
-const expect = require('unexpected');
 
 aws.config.setPromisesDependency(Promise);
 

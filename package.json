@@ -45,7 +45,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --bail --exit --timeout 0 -r ts-node/register -r source-map-support test",
-    "lint": "./node_modules/.bin/eslint src test",
+    "lint": "./node_modules/.bin/eslint src --ext .js,.ts,.tsx",
     "check-types": "tsc",
     "build": "yarn build:types && yarn build:js",
     "build:types": "tsc --emitDeclarationOnly",

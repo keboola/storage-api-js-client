@@ -1,6 +1,5 @@
+import expect from 'unexpected';
 import Storage from '../src/Storage';
-
-const expect = require('unexpected');
 
 describe('Storage', () => {
   const storage = new Storage(process.env.KBC_URL, process.env.KBC_TOKEN);
