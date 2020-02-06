@@ -1,13 +1,13 @@
+import aws from 'aws-sdk';
+import csv from 'fast-csv';
+import fs from 'fs';
+import _ from 'lodash';
+import os from 'os';
+import stream from 'stream';
+import expect from 'unexpected';
+import util from 'util';
 import Storage from '../src/Storage';
 
-const _ = require('lodash');
-const aws = require('aws-sdk');
-const csv = require('fast-csv');
-const fs = require('fs');
-const expect = require('unexpected');
-const os = require('os');
-const stream = require('stream');
-const util = require('util');
 
 const streamFinished = util.promisify(stream.finished);
 

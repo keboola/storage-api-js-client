@@ -1,7 +1,6 @@
+import _ from 'lodash';
+import expect from 'unexpected';
 import Storage from '../src/Storage';
-
-const _ = require('lodash');
-const expect = require('unexpected');
 
 describe('Storage.Buckets', () => {
   const storage = new Storage(process.env.KBC_URL, process.env.KBC_TOKEN);
