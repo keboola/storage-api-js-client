@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import aws from 'aws-sdk';
-import csv from 'fast-csv';
+
 import fs from 'fs';
 import _ from 'lodash';
 import os from 'os';
@@ -7,6 +8,10 @@ import stream from 'stream';
 import expect from 'unexpected';
 import util from 'util';
 import Storage from '../src/Storage';
+
+// es6 import of fast-csv fails on CI, who knows why
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const csv = require('fast-csv');
 
 
 const streamFinished = util.promisify(stream.finished);

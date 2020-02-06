@@ -24,7 +24,7 @@ export default class Tables {
     this.storage = storage;
   }
 
-  async create(bucket: string, name: string, filePath: string, options: Record<string, any> = {}): Promise<void> {
+  async uploadFileToS3(name: string, filePath: string): Promise<Record<string, any>> {
     const file = await this.storage.Files.prepare(name, { federationToken: 1 });
     const s3 = new aws.S3({
       accessKeyId: file.uploadParams.credentials.AccessKeyId,
@@ -36,6 +36,11 @@ export default class Tables {
       Key: file.uploadParams.key,
       Body: fs.readFileSync(filePath),
     }).promise();
+    return file;
+  }
+
+  async create(bucket: string, name: string, filePath: string, options: Record<string, any> = {}): Promise<void> {
+    const file = await this.uploadFileToS3(name, filePath);
 
     const requestResult = await this.storage.request(
       'post',
@@ -50,17 +55,7 @@ export default class Tables {
   }
 
   async import(tableId: string, filePath: string, options: Record<string, any> = {}): Promise<void> {
-    const file = await this.storage.Files.prepare(tableId, { federationToken: 1 });
-    const s3 = new aws.S3({
-      accessKeyId: file.uploadParams.credentials.AccessKeyId,
-      secretAccessKey: file.uploadParams.credentials.SecretAccessKey,
-      sessionToken: file.uploadParams.credentials.SessionToken,
-    });
-    await s3.putObject({
-      Bucket: file.uploadParams.bucket,
-      Key: file.uploadParams.key,
-      Body: fs.readFileSync(filePath),
-    }).promise();
+    const file = await this.uploadFileToS3(tableId, filePath);
 
     const requestResult = await this.storage.request(
       'post',
@@ -158,20 +153,12 @@ export default class Tables {
       });
       const outStream = fs.createWriteStream(`${tempDir}/${current}`);
       const readStream = objectRequest.createReadStream();
-      readStream.on('error', (err) => {
-        outStream.emit('S3 Download Error', err);
-      });
+      readStream.on('error', (err) => outStream.emit('S3 Download Error', err));
       readStream.pipe(outStream);
       return new Promise((resolve, reject) => {
-        outStream.on('end', () => {
-          resolve();
-        });
-        outStream.on('finish', () => {
-          resolve();
-        });
-        outStream.on('error', (error) => {
-          reject(error);
-        });
+        outStream.on('end', () => resolve());
+        outStream.on('finish', () => resolve());
+        outStream.on('error', (error) => reject(error));
       });
     }));
 

@@ -57,7 +57,7 @@ export default class Storage {
         throw createError(401, 'Invalid access token');
       }
       const message = _.get(err, 'response.data.error', err.message);
-      const code = _.get(err, 'response.status', 0);
+      const code = _.get(err, 'response.status', 400);
       throw createError(
         code,
         `Storage request ${method} ${url} failed with code ${code} and message: ${message}`
