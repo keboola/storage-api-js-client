@@ -1,0 +1,21 @@
+name: "Publish"
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: yarn install && yarn list --installed
+      - name: Publish
+        run: yarn publish --new-version ${GITHUB_REF#"refs/tags/"} --no-git-tag-version
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
