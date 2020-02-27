@@ -18,6 +18,7 @@ jobs:
         run: yarn install
       - name: Publish
         run: |
+          yarn build
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm version ${GITHUB_REF#"refs/tags/"}
