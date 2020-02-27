@@ -13,9 +13,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
-        run: yarn install && yarn list --installed
+        run: yarn install
       - name: Publish
-        run: yarn publish --new-version ${GITHUB_REF#"refs/tags/"} --no-git-tag-version
+        run: npm publish --tag ${GITHUB_REF#"refs/tags/"}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
