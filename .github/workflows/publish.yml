@@ -17,6 +17,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Publish
-        run: npm publish --tag ${GITHUB_REF#"refs/tags/"}
+        run: npm version ${GITHUB_REF#"refs/tags/"} && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
