@@ -61,4 +61,4 @@ The repository requires conforming to a set of coding standards based on [AirBnB
 
 ### Deployment
 
-Deployment to NPM compiles the code from `src` directory to `lib` directory. Flow files are compiled to ES6 Javascript and original files are copied with `.flow` extension. (So e.g. `src/Buckets.js` is copied to `lib/Buckets.js.flow` and compiled to `lib/Buckets.js`).
+Deployment to NPM compiles the code from `src` directory to `lib` directory. TypeScript files are compiled to ES6 Javascript.
