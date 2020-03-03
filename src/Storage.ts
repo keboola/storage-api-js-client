@@ -65,7 +65,7 @@ export default class Storage {
     }
   }
 
-  verifyToken(): Promise<any> {
+  async verifyToken(): Promise<any> {
     return this.request('get', 'tokens/verify');
   }
 
@@ -75,5 +75,13 @@ export default class Storage {
       throw createError(403, 'You need a master Storage token');
     }
     return auth;
+  }
+
+  async generateId(): Promise<number> {
+    const res = await this.request('post', 'tickets');
+    if (!_.has(res, 'id')) {
+      throw createError(400, 'Unique id generation is missing id field');
+    }
+    return _.toInteger(res.id);
   }
 }
