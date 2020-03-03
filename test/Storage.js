@@ -26,4 +26,10 @@ describe('Storage', () => {
       expect(res, 'to have key', 'owner');
       expect(res.token, 'to be', process.env.KBC_TOKEN);
     }));
+
+  it('generateId', async () => {
+    const res = await expect(storage.generateId(), 'to be fulfilled');
+    expect(res, 'to be a', 'number');
+    expect(res, 'to be positive');
+  });
 });
