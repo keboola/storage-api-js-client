@@ -32,4 +32,9 @@ describe('Storage', () => {
     expect(res, 'to be a', 'number');
     expect(res, 'to be positive');
   });
+
+  it('index', async () => {
+    const res = await expect(storage.index(), 'to be fulfilled');
+    expect(res, 'to have key', 'components');
+  });
 });

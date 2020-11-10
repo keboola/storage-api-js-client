@@ -42,7 +42,10 @@ export default class Storage {
     uri: string,
     data: object | null = null
   ): Promise<any> {
-    const url = `${this.baseUri}/v2/storage/${uri}`;
+    let url = `${this.baseUri}/v2/storage`;
+    if (uri) {
+      url += `/${uri}`;
+    }
     const params = {
       method,
       url,
@@ -63,6 +66,10 @@ export default class Storage {
         `Storage request ${method} ${url} failed with code ${code} and message: ${message}`
       );
     }
+  }
+
+  async index(): Promise<any> {
+    return this.request('get', '');
   }
 
   async verifyToken(): Promise<any> {
