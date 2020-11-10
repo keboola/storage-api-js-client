@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Storage from './Storage';
 
-
 enum BucketListOptionConst {
   attributes, metadata, linkedBuckets
 }

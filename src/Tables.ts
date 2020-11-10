@@ -16,7 +16,6 @@ enum TableListOptionConst {
 }
 type TableListOption = keyof typeof TableListOptionConst;
 
-
 export default class Tables {
   storage: Storage;
 
