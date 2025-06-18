@@ -79,7 +79,7 @@ describe('Storage.Tables', () => {
   });
 
   afterEach(() => {
-    storage.request('delete', `buckets/${bucketId}?force=1&async=1`)
+    return storage.request('delete', `buckets/${bucketId}?force=1&async=1`)
       .then((res) => storage.Jobs.wait(res.id));
   });
 
