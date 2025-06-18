@@ -129,7 +129,7 @@ export default class Tables {
     const fileRes = await axios.get(file.url);
     if (!file.isSliced) {
       fs.writeFileSync(filePath, fileRes.data);
-      return Promise.resolve();
+      return Promise.resolve(undefined);
     }
 
     const slices = _.map(fileRes.data.entries, (r) => r.url);
@@ -155,15 +155,15 @@ export default class Tables {
       readStream.on('error', (err) => outStream.emit('S3 Download Error', err));
       readStream.pipe(outStream);
       return new Promise((resolve, reject) => {
-        outStream.on('end', () => resolve());
-        outStream.on('finish', () => resolve());
+        outStream.on('end', () => resolve(undefined));
+        outStream.on('finish', () => resolve(undefined));
         outStream.on('error', (error) => reject(error));
       });
     }));
 
     execSync(`cat ${tempDir}/* > ${filePath}`);
     execSync(`rm -rf ${tempDir}`);
-    return Promise.resolve();
+    return Promise.resolve(undefined);
   }
 
   delete(id: string): Promise<any> {
