@@ -167,6 +167,6 @@ export default class Tables {
   }
 
   delete(id: string): Promise<any> {
-    return this.storage.request('delete', `tables/${id}`);
+    return this.storage.request('delete', `tables/${id}?async=1`);
   }
 }
