@@ -91,7 +91,7 @@ export default class Tables {
   async getTableFile(tableId: string, options: Record<string, any> = {}): Promise<any> {
     const requestRes = await this.storage.request('post', `tables/${tableId}/export-async`, options);
     const jobRes = await this.storage.Jobs.wait(requestRes.id);
-    const fileId = _.get(jobRes, 'results.file.id');
+    const fileId = _.get(jobRes, 'results.file.id') as unknown as string;
     return this.storage.Files.get(fileId, true);
   }
 
