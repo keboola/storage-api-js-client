@@ -24,6 +24,6 @@ jobs:
       - name: Run tests
         run: yarn test
         env:
-          KBC_URL: https://connection.keboola.com
+          KBC_URL: ${{ vars.KBC_URL }}
           KBC_TOKEN: ${{ secrets.KBC_TOKEN }}
           KBC_COMPONENT: keboola.ex-db-mysql
