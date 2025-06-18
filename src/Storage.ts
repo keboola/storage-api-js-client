@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import axiosRetry from 'axios-retry';
 import createError from 'http-errors';
 import qs from 'qs';
@@ -59,12 +59,15 @@ export default class Storage {
       if (_.get(err, 'response.status', null) === 401) {
         throw createError(401, 'Invalid access token');
       }
-      const message = _.get(err, 'response.data.error', err.message);
-      const code = _.get(err, 'response.status', 400);
-      throw createError(
-        code,
-        `Storage request ${method} ${url} failed with code ${code} and message: ${message}`
-      );
+      if (err instanceof AxiosError) {
+        const message = _.get(err, 'response.data.error', err.message);
+        const code = _.get(err, 'response.status', 400);
+        throw createError(
+          code,
+          `Storage request ${method} ${url} failed with code ${code} and message: ${message}`
+        );
+      }
+      throw new Error('Unknown error');
     }
   }
 
