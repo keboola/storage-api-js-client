@@ -67,6 +67,12 @@ export default class Storage {
           `Storage request ${method} ${url} failed with code ${code} and message: ${message}`
         );
       }
+
+      if (err instanceof Error) {
+        throw err;
+      }
+
+      // all other errors
       throw new Error('Unknown error');
     }
   }
