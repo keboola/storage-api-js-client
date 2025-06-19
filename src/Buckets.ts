@@ -30,9 +30,9 @@ export default class Buckets {
   }
 
   delete(id: string, force = false): Promise<any> {
-    let uri = `buckets/${id}`;
+    let uri = `buckets/${id}?async=1`;
     if (force) {
-      uri += '?force=1';
+      uri += '&force=1';
     }
     return this.storage.request('delete', uri);
   }

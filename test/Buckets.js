@@ -15,7 +15,7 @@ describe('Storage.Buckets', () => {
     expect(res, 'to have key', 'description');
     expect(res.description, 'to be', bucketName);
 
-    await storage.request('delete', `buckets/${bucketId}`);
+    await storage.request('delete', `buckets/${bucketId}?async=1`);
   });
 
   it('get', async () => {
@@ -30,7 +30,8 @@ describe('Storage.Buckets', () => {
     expect(res, 'to have key', 'name');
     expect(res.name, 'to be', `c-${bucketName}`);
 
-    await storage.request('delete', `buckets/${bucketId}`);
+    const deleteBucketResponse = await storage.request('delete', `buckets/${bucketId}?async=1`);
+    await storage.Jobs.wait(deleteBucketResponse.id);
     await expect(storage.Buckets.get(bucketId), 'to be rejected');
   });
 
@@ -61,7 +62,7 @@ describe('Storage.Buckets', () => {
       expect(item, 'to have key', 'metadata');
     }));
 
-    await storage.request('delete', `buckets/${bucketId}`);
+    await storage.request('delete', `buckets/${bucketId}?async=1`);
   });
 
   it('delete', async () => {
@@ -69,7 +70,8 @@ describe('Storage.Buckets', () => {
     const bucketId = `in.c-${bucketName}`;
     await expect(storage.Buckets.delete(bucketId), 'to be rejected');
     await storage.request('post', 'buckets', { stage: 'in', name: bucketName });
-    await expect(storage.Buckets.delete(bucketId), 'to be fulfilled');
+    const deleteBucketResponse = await storage.Buckets.delete(bucketId);
+    await expect(storage.Jobs.wait(deleteBucketResponse.id), 'to be fulfilled');
     await expect(() => storage.request('get', `buckets/${bucketId}`), 'to be rejected');
   });
 });

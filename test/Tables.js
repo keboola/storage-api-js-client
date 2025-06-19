@@ -13,7 +13,6 @@ import Storage from '../src/Storage';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const csv = require('fast-csv');
 
-
 const streamFinished = util.promisify(stream.finished);
 
 class FileStream {
@@ -79,7 +78,10 @@ describe('Storage.Tables', () => {
     return storage.request('post', 'buckets', { stage: 'in', name: bucketName });
   });
 
-  afterEach(() => storage.request('delete', `buckets/${bucketId}?force=1`));
+  afterEach(() => {
+    return storage.request('delete', `buckets/${bucketId}?force=1&async=1`)
+      .then((res) => storage.Jobs.wait(res.id));
+  });
 
   it('create', async () => {
     const res = await storage.Tables.create(bucketId, 'table', `${__dirname}/sample.csv`, { primaryKey: 'id' });
@@ -201,7 +203,8 @@ describe('Storage.Tables', () => {
   it('delete', async () => {
     await createTestTable(storage, bucketId, tableName);
     await expect(storage.request('get', `tables/${tableId}`), 'to be fulfilled');
-    await expect(storage.Tables.delete(tableId), 'to be fulfilled');
+    const deleteTableResponse = await storage.Tables.delete(tableId);
+    await expect(storage.Jobs.wait(deleteTableResponse.id), 'to be fulfilled');
     await expect(storage.request('get', `tables/${tableId}`), 'to be rejected');
   });
 });

@@ -1,5 +1,11 @@
+.idea
+.yarn
+.pnp.*
+package-lock.json
+
 # package directories
 node_modules
 yarn.lock
 test.sh
 dist
+.env

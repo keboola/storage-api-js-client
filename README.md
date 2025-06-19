@@ -48,21 +48,17 @@ storage.Tables.exportToFile(tableId: string, options: Object = {}, path: string)
 storage.Tables.delete(id: string): Promise<any>;
 ```
 
+This will:
+1. Generate TypeScript declaration files (`yarn build:types`)
+2. Compile TypeScript to JavaScript (`yarn build:js`)
+
+The compiled code will be placed in the `dist` directory.
 
 ### Tests and development
 
-You need to set some env variables for the tests:
+You need to set some env variables for the tests into `.env` file in the root of the repository. 
+The `.env` file should contain the following variables:
 - `KBC_URL`
-- `KBC_TOKEN` - a *master* token to a testing project. **Please note that the project will be wiped out during the tests.**
+- `KBC_TOKEN`
 - `KBC_COMPONENT` - name of some component used for Components Configurations API tests
 Tests can be run using `yarn test`.
-
-The repository requires conforming to a set of coding standards based on [AirBnB code standard](https://github.com/airbnb/javascript) checked by ESlint. You can run the check using `yarn lint`.
-
-### Deployment
-
-Deployment to NPM compiles the code from `src` directory to `dist` directory. TypeScript files are compiled to ES6 Javascript.
-
-## License
-
-MIT licensed, see [LICENSE](./LICENSE) file.

@@ -9,12 +9,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
-    "@types/http-errors": "^1.6.3",
-    "@types/lodash": "^4.14.149",
-    "@types/qs": "^6.9.0",
     "aws-sdk": "^2.236.1",
-    "axios": "^0.26.1",
+    "axios": "1.10.0",
     "axios-retry": "^3.1.0",
     "csv-parse": "^4.4.1",
     "http-errors": "^1.7.0",
@@ -31,21 +27,26 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-typescript": "^7.8.3",
     "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.1.2",
     "@keboola/eslint-config-node": "^2.0.0",
+    "@types/http-errors": "^1.6.3",
+    "@types/lodash": "^4.14.149",
+    "@types/qs": "^6.9.0",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
+    "dotenv": "^16.5.0",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.14.0",
     "fast-csv": "^4.3.6",
     "mocha": "^6.1.4",
     "ts-node": "^8.6.2",
-    "typescript": "^3.7.5",
+    "typescript": "^4.1.0",
     "unexpected": "^11.5.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --bail --exit --timeout 0 -r ts-node/register  -r @babel/register -r source-map-support test",
+    "test": "./node_modules/.bin/mocha --bail --exit --timeout 0 -r dotenv/config -r ts-node/register  -r @babel/register -r source-map-support test",
     "lint": "./node_modules/.bin/eslint src --ext .js,.ts,.tsx",
     "check-types": "tsc",
     "build": "yarn build:types && yarn build:js",
@@ -56,5 +57,6 @@
     "dist"
   ],
   "main": "dist/Storage.js",
-  "types": "dist/Storage.d.ts"
+  "types": "dist/Storage.d.ts",
+  "packageManager": "yarn@1.22.19"
 }
